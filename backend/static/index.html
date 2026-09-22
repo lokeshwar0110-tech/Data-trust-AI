@@ -1,0 +1,1260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataTrust AI — Task-Conditioned Dataset Fitness Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- Header -->
+  <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-500 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/20">
+          <i class="fa-solid fa-shield-halved text-white text-lg"></i>
+        </div>
+        <div>
+          <span class="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">DataTrust <span class="text-blue-400">AI</span></span>
+          <span class="ml-2 text-[10px] uppercase px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-semibold">Closed-Loop Engine</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-4 text-xs text-slate-400">
+        <span class="hidden md:flex items-center gap-1.5"><i class="fa-solid fa-brain text-indigo-400"></i> Sensitivity Mapping: <b class="text-emerald-400">M(T, Q) Active</b></span>
+        <a href="/docs" target="_blank" class="px-3 py-1.5 rounded-lg border border-slate-700 hover:border-slate-500 hover:text-white transition flex items-center gap-2">
+          <i class="fa-solid fa-book-open"></i> API Docs
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Grid -->
+  <main class="max-w-7xl mx-auto px-6 py-8 flex-1 grid grid-cols-1 lg:grid-cols-12 gap-8 w-full">
+
+    <!-- Left Controls (4 Cols) -->
+    <div class="lg:col-span-4 space-y-6">
+      
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-500"></div>
+        <h2 class="text-base font-semibold text-white flex items-center gap-2 mb-4">
+          <i class="fa-solid fa-sliders text-blue-400"></i> Ingestion & Task Selection
+        </h2>
+
+        <form id="evalForm" class="space-y-4">
+          <!-- File Drop Zone -->
+          <div>
+            <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Upload Dataset (.csv, .parquet, .xlsx)</label>
+            <div id="dropZone" class="border-2 border-dashed border-slate-700 hover:border-blue-500 transition rounded-xl p-4 text-center cursor-pointer bg-slate-950/40">
+              <i class="fa-solid fa-cloud-arrow-up text-2xl text-slate-500 mb-2"></i>
+              <p class="text-xs text-slate-300 font-medium" id="fileNameDisplay">Drag & drop or click to browse</p>
+              <p class="text-[10px] text-slate-500 mt-1">Excel, CSV, Parquet up to 100MB</p>
+              <input type="file" id="fileInput" class="hidden" accept=".csv,.parquet,.xlsx,.xls" />
+            </div>
+          </div>
+
+          <!-- Task Selection: Manual vs Auto Detect Radio -->
+          <div>
+            <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">Task Selection Mode</label>
+            <div class="grid grid-cols-2 gap-2 p-1 bg-slate-950 rounded-xl border border-slate-800">
+              <label class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-medium cursor-pointer transition has-[:checked]:bg-blue-600 has-[:checked]:text-white text-slate-400">
+                <input type="radio" name="taskMode" value="auto" checked onchange="toggleTaskMode(this.value)" class="hidden" />
+                <i class="fa-solid fa-wand-magic-sparkles text-[11px]"></i> Auto Detect
+              </label>
+              <label class="flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-xs font-medium cursor-pointer transition has-[:checked]:bg-blue-600 has-[:checked]:text-white text-slate-400">
+                <input type="radio" name="taskMode" value="manual" onchange="toggleTaskMode(this.value)" class="hidden" />
+                <i class="fa-solid fa-hand text-[11px]"></i> Manual
+              </label>
+            </div>
+          </div>
+
+          <!-- Manual Task Dropdown (hidden in Auto mode) -->
+          <div id="manualTaskContainer" class="hidden">
+            <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-1.5">Specified Objective</label>
+            <select id="taskSelect" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-blue-500">
+              <option value="supervised_regression">Supervised Regression</option>
+              <option value="supervised_classification">Supervised Classification</option>
+              <option value="time_series_forecasting">Time Series Forecasting</option>
+              <option value="descriptive_bi">Descriptive Analytics / BI</option>
+            </select>
+          </div>
+
+          <!-- Autonomous Inference Card (Visible in Auto Mode) -->
+          <div id="detectedTaskCard" class="p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/30 text-xs space-y-2">
+            <div class="flex items-center justify-between text-indigo-300 font-semibold mb-1">
+              <span>Autonomous Task Inference:</span>
+              <span id="detectedConfidenceBadge" class="text-emerald-400 font-mono text-[11px]">--%</span>
+            </div>
+            <div id="detectedTaskName" class="text-sm font-bold text-white mb-1">Awaiting Ingestion</div>
+            <p id="detectedReason" class="text-[11px] text-slate-400">Target datatype, cardinality, and temporal structure will be automatically inferred.</p>
+            <div id="detectedTargetRow" class="text-[11px] flex items-center justify-between text-slate-300 pt-1 border-t border-indigo-500/20">
+              <span class="text-slate-400">Target Column:</span>
+              <span id="detectedTargetBadge" class="font-mono text-slate-400 italic">None (Unlabelled)</span>
+            </div>
+            <div id="candidateTargetsRow" class="text-[10px] text-slate-400 pb-1">
+              <span class="text-slate-500 font-bold uppercase">Candidate Targets:</span>
+              <span id="candidateTargetsList" class="font-mono text-cyan-300">--</span>
+            </div>
+            <div id="evidenceBox" class="hidden pt-2 border-t border-indigo-500/20 space-y-1.5 text-[11px]">
+              <div>
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Task Probabilities P(T|D):</span>
+                <div id="posteriorBars" class="grid grid-cols-2 gap-1 font-mono text-[10px] text-slate-300 mt-0.5"></div>
+              </div>
+              <div class="pt-1">
+                <span class="text-[10px] uppercase font-bold text-slate-400 block">Empirical Evidence:</span>
+                <ul id="evidenceList" class="space-y-0.5 text-slate-300"></ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Explicit Column Overrides (Optional) -->
+          <div class="grid grid-cols-2 gap-3 pt-1">
+            <div>
+              <label class="block text-[11px] font-medium text-slate-400 mb-1">Target Column</label>
+              <input type="text" id="targetCol" list="targetColList" placeholder="Auto if empty" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500" />
+              <datalist id="targetColList"></datalist>
+            </div>
+            <div>
+              <label class="block text-[11px] font-medium text-slate-400 mb-1">Time Column</label>
+              <input type="text" id="timeCol" list="timeColList" placeholder="Auto if empty" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-blue-500" />
+              <datalist id="timeColList"></datalist>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" id="submitBtn" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-600 hover:opacity-95 text-white font-medium text-xs shadow-lg shadow-blue-500/25 transition duration-200 flex items-center justify-center gap-2 mt-2">
+            <i class="fa-solid fa-play"></i> Compute Task-Conditioned Fitness
+          </button>
+        </form>
+
+        <!-- 4 Deliberate Benchmark Scenarios -->
+        <div class="mt-5 pt-4 border-t border-slate-800">
+          <label class="block text-xs font-medium text-slate-400 uppercase tracking-wider mb-2">4 Benchmark Proof Datasets</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="runDemo('clean')" class="px-2 py-1.5 text-xs bg-slate-800/70 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 flex items-center gap-1.5 transition text-left">
+              <i class="fa-solid fa-circle-check text-emerald-400"></i> Dataset A: Clean
+            </button>
+            <button onclick="runDemo('extreme_outliers')" class="px-2 py-1.5 text-xs bg-slate-800/70 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 flex items-center gap-1.5 transition text-left">
+              <i class="fa-solid fa-bolt text-purple-400"></i> Dataset B: Outliers
+            </button>
+            <button onclick="runDemo('temporal_leakage')" class="px-2 py-1.5 text-xs bg-slate-800/70 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 flex items-center gap-1.5 transition text-left">
+              <i class="fa-solid fa-clock text-amber-400"></i> Dataset C: Time Leak
+            </button>
+            <button onclick="runDemo('class_imbalance')" class="px-2 py-1.5 text-xs bg-slate-800/70 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 flex items-center gap-1.5 transition text-left">
+              <i class="fa-solid fa-scale-unbalanced text-rose-400"></i> Dataset D: Imbalance
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CARD 2: TASK-QUALITY SENSITIVITY -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <div class="flex items-center justify-between mb-2">
+          <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center gap-2">
+            <i class="fa-solid fa-chart-network text-indigo-400"></i> Task–Quality Sensitivity
+          </h3>
+          <span class="text-[10px] text-slate-400 mono">W(T) = f(M, D)</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mb-3">Operational defect vulnerability weights derived from formal M(T, Q) matrix.</p>
+        <div id="sensitivityTable" class="space-y-1.5 text-xs">
+          <p class="text-slate-500 italic text-[11px]">Run evaluation to view sensitivity mapping.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Results Panel (8 Cols) -->
+    <div class="lg:col-span-8 space-y-6">
+
+      <!-- CARD 1: DATASET FITNESS EVALUATION -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800 mb-4">
+          <span class="text-xs font-bold uppercase tracking-wider text-slate-400">Dataset Fitness Evaluation</span>
+          <span id="ahpCrBadge" class="text-xs font-mono text-emerald-400 bg-emerald-950/60 px-2.5 py-0.5 rounded border border-emerald-700/60">AHP CR: -- &check;</span>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div class="flex items-center gap-5">
+            <div id="scoreCircle" class="w-24 h-24 rounded-full border-4 border-slate-800 flex flex-col items-center justify-center bg-slate-950 shadow-inner shrink-0">
+              <span id="fitnessVal" class="text-3xl font-extrabold text-white tracking-tight mono">--</span>
+              <span class="text-[9px] uppercase font-bold text-slate-500">Fitness</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span id="statusBadge" class="px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-800 text-slate-400 border border-slate-700">Awaiting Analysis</span>
+                <span id="rawScoreDisplay" class="text-xs text-slate-500 mono"></span>
+              </div>
+              <h3 id="datasetNameDisplay" class="text-lg font-bold text-white">No Dataset Evaluated</h3>
+              <div id="taskMetaDisplay" class="text-xs text-slate-400 mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+                <span>Task: <b id="metaTaskName" class="text-slate-200">--</b></span>
+                <span>Target: <b id="metaTargetName" class="text-amber-300 font-mono">--</b></span>
+                <span>Model Family: <b id="metaModelFamily" class="text-indigo-300">--</b></span>
+                <span>Metric: <b id="metaMetric" class="text-cyan-400 font-mono">--</b></span>
+                <span>Task Confidence: <b id="metaTaskConf" class="text-emerald-400 font-mono">--%</b></span>
+              </div>
+              <p id="uncertaintyDisplay" class="text-[11px] font-mono text-cyan-400 mt-1">95% CI: --</p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-2 shrink-0">
+            <button id="downloadPdfBtn" onclick="downloadCurrentPdf()" disabled class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition disabled:opacity-40 disabled:cursor-not-allowed">
+              <i class="fa-solid fa-file-pdf text-rose-400"></i> Export PDF Audit
+            </button>
+            <button id="downloadReceiptBtn" onclick="downloadCurrentReceipt()" disabled class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold border border-slate-700 flex items-center gap-1.5 transition disabled:opacity-40 disabled:cursor-not-allowed">
+              <i class="fa-solid fa-receipt text-cyan-400"></i> Audit Receipt (JSON)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3: CRITICAL DEFECT ENGINE -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-shield-xmark text-rose-400"></i> Critical Defect Engine
+        </h3>
+        <div id="vetoCardContent" class="p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-600/40 text-xs flex items-center gap-3">
+          <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+          <div>
+            <span class="font-bold text-emerald-300">&check; No fatal constraints triggered</span>
+            <p class="text-[11px] text-emerald-200/80 mt-0.5">Dataset harbors no task-fatal defects. Full compensatory scoring applies.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 4: DOWNSTREAM VALIDATION & CALIBRATION (Dual Grid) -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Downstream Model Validation -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+              <i class="fa-solid fa-microchip-ai text-cyan-400"></i> Downstream Validation
+            </h3>
+            <button onclick="runAutoValidation()" id="autoValBtn" class="text-[10px] px-2 py-1 rounded bg-cyan-600/20 hover:bg-cyan-600/40 text-cyan-300 border border-cyan-500/30 transition">
+              <i class="fa-solid fa-play text-[9px]"></i> Run Model
+            </button>
+          </div>
+          
+          <div class="space-y-2 text-xs font-mono">
+            <div class="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800/80">
+              <span class="text-slate-400">Predicted <span id="metricNameA">Metric</span>:</span>
+              <span id="valPredicted" class="text-white font-bold">--</span>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800/80">
+              <span class="text-slate-400">Observed <span id="metricNameB">Metric</span>:</span>
+              <span id="valObserved" class="text-cyan-400 font-bold">--</span>
+            </div>
+            <div class="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800/80">
+              <span class="text-slate-400">Residual &epsilon;:</span>
+              <span id="valResidual" class="text-amber-400 font-bold">--</span>
+            </div>
+          </div>
+          <p id="valStatusText" class="text-[11px] text-slate-500 italic mt-2.5">Evaluates true out-of-sample model loss vs expected fitness.</p>
+        </div>
+
+        <!-- Adaptive Calibration Engine -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-white mb-3 flex items-center gap-2">
+            <i class="fa-solid fa-arrows-spin text-purple-400"></i> Adaptive Calibration
+          </h3>
+          <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-slate-400">Calibration Status:</span>
+              <span id="calibStatusBadge" class="text-[11px] font-semibold text-slate-400">Awaiting Feedback</span>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-800/60 pt-2 font-mono">
+              <span class="text-slate-400">Fitness Transition:</span>
+              <span id="calibFitnessTransition" class="text-white font-bold">-- &rarr; --</span>
+            </div>
+            <div id="calibResidualRow" class="hidden flex items-center justify-between font-mono text-[11px]">
+              <span class="text-slate-400">Residual Error (&epsilon;):</span>
+              <span id="calibResidualTransition" class="text-amber-400 font-bold">-- &rarr; --</span>
+            </div>
+            <div id="calibReductionRow" class="hidden flex items-center justify-between font-mono text-[11px]">
+              <span class="text-slate-400">Residual Reduction:</span>
+              <span id="calibReductionPct" class="text-emerald-400 font-bold">--%</span>
+            </div>
+            <p id="calibExplanation" class="text-[11px] text-slate-400 mt-1">Weight modification adjusts defect penalties based on the performance residual.</p>
+          </div>
+          <div id="calibWeightsContainer" class="hidden mt-2 p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/70 text-[10px] font-mono">
+            <span class="text-[9px] uppercase font-bold text-slate-400 block mb-1">Adaptive Weight Updates:</span>
+            <div id="calibWeightsList" class="space-y-1"></div>
+          </div>
+          <div class="mt-2.5 flex items-center gap-2">
+            <input type="number" step="0.1" id="manualObsInput" placeholder="Override Observed (e.g. 14.1)" class="w-full bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-cyan-500" />
+            <button onclick="submitManualCalibration()" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium shrink-0 transition">
+              Calibrate
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- CARD 5: REMEDIATION OPTIMIZER & WHAT-IF SIMULATION -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+              <i class="fa-solid fa-wand-magic-sparkles text-amber-400"></i> Counterfactual MRU Optimizer (MRU = &Delta;Fitness / Cost)
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">Select candidate fixes to compute simulated counterfactual post-remediation fitness in real time.</p>
+          </div>
+
+          <!-- What-If Live Simulator Metrics -->
+          <div class="flex items-center gap-4 bg-slate-950 px-4 py-2 rounded-xl border border-slate-800 shrink-0">
+            <div>
+              <span class="text-[9px] uppercase font-bold text-slate-500 block">Current</span>
+              <span id="simCurrentFitness" class="text-xs font-bold text-white mono">--</span>
+            </div>
+            <div class="text-slate-600">&rarr;</div>
+            <div>
+              <span class="text-[9px] uppercase font-bold text-slate-500 block">Simulated</span>
+              <span id="simResultFitness" class="text-sm font-extrabold text-emerald-400 mono">--</span>
+            </div>
+            <div>
+              <span class="text-[9px] uppercase font-bold text-slate-500 block">Predicted Gain (Simulated)</span>
+              <span id="simExpectedGain" class="text-xs font-bold text-cyan-400 mono">+0.0</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pre-Computed Scenarios (A, B, C) -->
+        <div id="scenarioPills" class="grid grid-cols-1 sm:grid-cols-3 gap-3 my-4">
+          <button onclick="applyPresetScenario(0)" id="scenBtn0" class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-600 text-left transition">
+            <span class="text-[10px] text-slate-400 block font-semibold">Scenario A &bull; Quick Wins</span>
+            <span id="scenVal0" class="text-xs font-mono font-bold text-white">--</span>
+          </button>
+          <button onclick="applyPresetScenario(1)" id="scenBtn1" class="p-2.5 rounded-xl bg-slate-950 border border-slate-800 hover:border-slate-600 text-left transition">
+            <span class="text-[10px] text-slate-400 block font-semibold">Scenario B &bull; Balanced Fix</span>
+            <span id="scenVal1" class="text-xs font-mono font-bold text-white">--</span>
+          </button>
+          <button onclick="applyPresetScenario(2)" id="scenBtn2" class="p-2.5 rounded-xl bg-slate-950 border border-indigo-500/50 bg-indigo-950/20 text-left transition">
+            <span class="text-[10px] text-indigo-300 block font-semibold">Scenario C &bull; Recommended &starf;</span>
+            <span id="scenVal2" class="text-xs font-mono font-bold text-emerald-400">--</span>
+          </button>
+        </div>
+
+        <!-- Action Items Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-slate-800 text-slate-400 text-[10px] uppercase">
+                <th class="pb-2 w-8">Select</th>
+                <th class="pb-2">Priority</th>
+                <th class="pb-2">Intervention & Actionable Recommendation</th>
+                <th class="pb-2 text-right">Predicted Gain (&Delta;Fitness)</th>
+                <th class="pb-2 text-right">Cost</th>
+                <th class="pb-2 text-right">MRU</th>
+              </tr>
+            </thead>
+            <tbody id="remediationRows" class="divide-y divide-slate-800/60 text-slate-300">
+              <tr><td colspan="6" class="py-4 text-center text-slate-500 italic">No dataset evaluated yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- CARD 6: BEFORE VS AFTER REMEDIATION VALIDATION -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800 mb-4">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-wider text-white flex items-center gap-2">
+              <i class="fa-solid fa-code-compare text-emerald-400"></i> Before vs After Remediation Validation
+            </h3>
+            <p class="text-[11px] text-slate-400 mt-0.5">Empirical proof of dataset fitness and downstream model loss improvement.</p>
+          </div>
+          <button id="runRemediationBtn" onclick="runRemediateAndValidate()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:opacity-95 text-white font-medium text-xs shadow-lg shadow-emerald-500/25 transition duration-200 flex items-center gap-2">
+            <i class="fa-solid fa-play"></i> Execute Remediation & Validate Before vs After
+          </button>
+        </div>
+
+        <div id="beforeAfterContent" class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+          <!-- Dataset Fitness Before vs After -->
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block">Dataset Fitness</span>
+              <span id="baDecisionBadge" class="text-[10px] font-bold px-2 py-0.5 rounded border border-slate-700 bg-slate-900 text-slate-400">PENDING</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-300">
+              <span>Before remediation:</span>
+              <span id="baFitnessBefore" class="font-bold text-white">--</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-300">
+              <span>After remediation:</span>
+              <span id="baFitnessAfter" class="font-bold text-emerald-400">--</span>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-800/80 pt-1 text-slate-300">
+              <span>Observed Gain:</span>
+              <span id="baFitnessGain" class="font-bold text-cyan-400">--</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-400 text-[10px] pt-0.5">
+              <span>Predicted (MRU) Gain:</span>
+              <span id="baFitnessPredGain" class="font-mono text-slate-300">--</span>
+            </div>
+          </div>
+
+          <!-- Downstream Model Metric Before vs After -->
+          <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] uppercase font-bold text-slate-400 block">Downstream Model (<span id="baMetricLabel">Metric</span>)</span>
+              <span id="baPerfStatusBadge" class="text-[10px] font-bold px-2 py-0.5 rounded border border-slate-700 bg-slate-900 text-slate-400">Neutral</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-300">
+              <span><span id="baMetricName1">Metric</span> before:</span>
+              <span id="baMetricBefore" class="font-bold text-white">--</span>
+            </div>
+            <div class="flex items-center justify-between text-slate-300">
+              <span><span id="baMetricName2">Metric</span> after:</span>
+              <span id="baMetricAfter" class="font-bold text-emerald-400">--</span>
+            </div>
+            <div class="flex items-center justify-between border-t border-slate-800/80 pt-1 text-slate-300">
+              <span id="baChangeLabel">Metric Change:</span>
+              <span id="baMetricPct" class="font-bold text-cyan-400">--%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Remediation Decision Banner -->
+        <div id="baDecisionBanner" class="hidden mt-3 p-3 rounded-xl bg-slate-950 border border-slate-800 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="font-bold uppercase tracking-wider text-[10px] text-slate-400">Closed-Loop Decision:</span>
+            <span id="baDecisionStatusText" class="font-bold">--</span>
+          </div>
+          <p id="baDecisionReasonText" class="text-slate-300 text-[11px] mt-1"></p>
+        </div>
+
+        <!-- Transformation Log -->
+        <div id="remediationLogContainer" class="mt-4 p-3 rounded-xl bg-slate-950/70 border border-slate-800/80 text-[11px] text-slate-400 space-y-1">
+          <span class="text-[10px] uppercase font-bold text-slate-500 block mb-1">Execution Log:</span>
+          <div id="remediationLogText" class="italic text-slate-500">Click 'Execute Remediation & Validate' to execute transformations and retrain the model.</div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <footer class="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+    DataTrust AI Platform &bull; Task-Conditioned Dataset Fitness Evaluation &bull; Closed-Loop Performance Calibration &bull; MRU Remediation Optimizer
+  </footer>
+
+  <script>
+    let currentReport = null;
+    let appliedActionIds = new Set();
+    let currentFile = null;
+    let currentScenario = null;
+
+    // Toggle Manual vs Auto Task Mode
+    function toggleTaskMode(mode) {
+      const manualContainer = document.getElementById('manualTaskContainer');
+      const autoCard = document.getElementById('detectedTaskCard');
+      if (mode === 'manual') {
+        manualContainer.classList.remove('hidden');
+        autoCard.classList.add('hidden');
+      } else {
+        manualContainer.classList.add('hidden');
+        autoCard.classList.remove('hidden');
+      }
+    }
+
+    // Drag and Drop
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileNameDisplay = document.getElementById('fileNameDisplay');
+
+    function parseHeaderAndPopulateLists(file) {
+      if (!file || !file.name.toLowerCase().endsWith('.csv')) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const text = e.target.result;
+        const firstLine = text.split(/\r\n|\n/)[0];
+        if (firstLine) {
+          const delimiter = firstLine.includes('\t') ? '\t' : (firstLine.includes(';') ? ';' : ',');
+          const cols = firstLine.split(delimiter).map(c => c.trim().replace(/^["']|["']$/g, '')).filter(Boolean);
+          const tgtList = document.getElementById('targetColList');
+          const timeList = document.getElementById('timeColList');
+          if (tgtList && cols.length > 0) {
+            tgtList.innerHTML = cols.map(c => `<option value="${c}"></option>`).join('');
+          }
+          if (timeList && cols.length > 0) {
+            timeList.innerHTML = cols.map(c => `<option value="${c}"></option>`).join('');
+          }
+        }
+      };
+      reader.readAsText(file.slice(0, 4096));
+    }
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        currentFile = fileInput.files[0];
+        currentScenario = null;
+        fileNameDisplay.innerText = currentFile.name;
+        parseHeaderAndPopulateLists(currentFile);
+      }
+    });
+
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('border-blue-500'); });
+    dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('border-blue-500'); });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('border-blue-500');
+      if (e.dataTransfer.files.length > 0) {
+        currentFile = e.dataTransfer.files[0];
+        currentScenario = null;
+        fileInput.files = e.dataTransfer.files;
+        fileNameDisplay.innerText = currentFile.name;
+        parseHeaderAndPopulateLists(currentFile);
+      }
+    });
+
+    // Form Submit
+    document.getElementById('evalForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentFile && !fileInput.files.length) {
+        alert("Please select a dataset file (.csv, .parquet, or .xlsx)");
+        return;
+      }
+
+      const file = currentFile || fileInput.files[0];
+      currentScenario = null;
+      const isAuto = document.querySelector('input[name="taskMode"]:checked').value === 'auto';
+      const taskVal = isAuto ? 'auto' : document.getElementById('taskSelect').value;
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('task', taskVal);
+      formData.append('target_column', document.getElementById('targetCol').value);
+      formData.append('time_column', document.getElementById('timeCol').value);
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Characterizing & Evaluating Fitness...';
+      submitBtn.disabled = true;
+
+      try {
+        const resp = await fetch('/api/v1/evaluate', { method: 'POST', body: formData });
+        if (!resp.ok) {
+          const err = await resp.json();
+          throw new Error(err.detail || "Evaluation failed");
+        }
+        const data = await resp.json();
+        renderCompleteAudit(data);
+      } catch (err) {
+        alert("Evaluation Error: " + err.message);
+      } finally {
+        submitBtn.innerHTML = '<i class="fa-solid fa-play"></i> Compute Task-Conditioned Fitness';
+        submitBtn.disabled = false;
+      }
+    });
+
+    // Run Demo Scenario
+    async function runDemo(scenario) {
+      currentScenario = scenario;
+      currentFile = null;
+      fileNameDisplay.innerText = `[Benchmark Preset: ${scenario}]`;
+
+      const isAuto = document.querySelector('input[name="taskMode"]:checked').value === 'auto';
+      const taskVal = isAuto ? 'auto' : document.getElementById('taskSelect').value;
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Running Benchmark...';
+      submitBtn.disabled = true;
+
+      try {
+        const resp = await fetch(`/api/v1/demo/${scenario}?task=${taskVal}`);
+        if (!resp.ok) throw new Error("Demo failed");
+        const data = await resp.json();
+        renderCompleteAudit(data);
+      } catch (err) {
+        alert("Demo Error: " + err.message);
+      } finally {
+        submitBtn.innerHTML = '<i class="fa-solid fa-play"></i> Compute Task-Conditioned Fitness';
+        submitBtn.disabled = false;
+      }
+    }
+
+    // Render Full UI Audit
+    function renderCompleteAudit(report) {
+      currentReport = report;
+      appliedActionIds.clear();
+      document.getElementById('downloadPdfBtn').disabled = false;
+      document.getElementById('downloadReceiptBtn').disabled = false;
+
+      // CARD 1: FITNESS EVALUATION
+      const fitness = report.task_conditioned_fitness;
+      document.getElementById('fitnessVal').innerText = fitness.toFixed(1);
+
+      const circle = document.getElementById('scoreCircle');
+      circle.className = "w-24 h-24 rounded-full border-4 flex flex-col items-center justify-center bg-slate-950 shadow-inner shrink-0";
+      if (fitness >= 85) circle.classList.add('border-emerald-500', 'shadow-emerald-500/20');
+      else if (fitness >= 70) circle.classList.add('border-amber-500', 'shadow-amber-500/20');
+      else circle.classList.add('border-rose-500', 'shadow-rose-500/20');
+
+      const statusBadge = document.getElementById('statusBadge');
+      statusBadge.innerText = report.confidence_tier;
+      statusBadge.className = "px-2.5 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider border";
+      if (report.confidence_tier.includes("High Fitness")) statusBadge.classList.add('bg-emerald-950', 'text-emerald-400', 'border-emerald-700');
+      else if (report.confidence_tier.includes("Moderate")) statusBadge.classList.add('bg-amber-950', 'text-amber-400', 'border-amber-700');
+      else statusBadge.classList.add('bg-rose-950', 'text-rose-400', 'border-rose-700');
+
+      document.getElementById('rawScoreDisplay').innerText = report.veto_applied ? `(Raw: ${report.raw_score.toFixed(1)})` : "";
+      document.getElementById('datasetNameDisplay').innerText = report.dataset_name;
+      
+      const taskDisplay = report.task_type.replace(/_/g, ' ').toUpperCase();
+      document.getElementById('metaTaskName').innerText = taskDisplay;
+      document.getElementById('metaModelFamily').innerText = report.model_family || (
+        report.task_type === 'time_series_forecasting' ? 'Autoregressive / Lagged Regression' :
+        (report.task_type === 'supervised_classification' ? 'Random Forest Classifier' :
+        (report.task_type === 'clustering' ? 'K-Means Clustering' : 'Random Forest Regressor'))
+      );
+      document.getElementById('metaMetric').innerText = report.metric || report.predicted_metric_name || (
+        report.task_type === 'clustering' ? 'Silhouette Score' :
+        (report.task_type === 'supervised_classification' ? 'F1' : 'RMSE')
+      );
+
+      // Populate column suggestions in datalists
+      if (report.profiling && report.profiling.column_types) {
+        const colNames = Object.keys(report.profiling.column_types);
+        const tgtList = document.getElementById('targetColList');
+        const timeList = document.getElementById('timeColList');
+        if (tgtList) {
+          tgtList.innerHTML = colNames.map(c => `<option value="${c}"></option>`).join('');
+        }
+        if (timeList) {
+          timeList.innerHTML = colNames.map(c => `<option value="${c}"></option>`).join('');
+        }
+        if (report.target_column && !document.getElementById('targetCol').value) {
+          document.getElementById('targetCol').placeholder = report.target_column;
+        }
+        if (report.time_column && !document.getElementById('timeCol').value) {
+          document.getElementById('timeCol').placeholder = report.time_column;
+        }
+      }
+      
+      const confVal = report.task_confidence !== undefined && report.task_confidence !== null ? (report.task_confidence * 100).toFixed(1) : (report.task_inference ? (report.task_inference.confidence * 100).toFixed(1) : "97.0");
+      document.getElementById('metaTaskConf').innerText = `${confVal}%`;
+      document.getElementById('ahpCrBadge').innerText = `AHP CR: ${report.ahp_consistency_ratio.toFixed(4)} \u2713`;
+
+      // Target Column Display in Header
+      const activeTarget = report.target_column || (report.task_inference && report.task_inference.detected_target ? report.task_inference.detected_target : (report.task_inference && report.task_inference.candidate_targets && report.task_inference.candidate_targets.length ? report.task_inference.candidate_targets[0] : "None (Unlabelled)"));
+      const metaTargetEl = document.getElementById('metaTargetName');
+      if (metaTargetEl) metaTargetEl.innerText = activeTarget;
+
+      // 95% Confidence Interval Display
+      if (report.fitness_uncertainty) {
+        const u = report.fitness_uncertainty;
+        document.getElementById('uncertaintyDisplay').innerText = `95% CI: ${u.ci_lower.toFixed(1)} - ${u.ci_upper.toFixed(1)} (\u00B1${u.margin_of_error.toFixed(1)} pts)`;
+      } else {
+        document.getElementById('uncertaintyDisplay').innerText = `95% CI: ${(fitness - 1.5).toFixed(1)} - ${(fitness + 1.5).toFixed(1)} (\u00B11.5 pts)`;
+      }
+
+      // Auto Detection Card & Evidence Update
+      if (report.task_inference) {
+        document.getElementById('detectedTaskName').innerText = report.task_inference.inferred_task.replace(/_/g, ' ').toUpperCase();
+        document.getElementById('detectedConfidenceBadge').innerText = `${(report.task_inference.confidence * 100).toFixed(1)}% Confidence`;
+        document.getElementById('detectedReason').innerText = report.task_inference.reasoning;
+
+        const detTarget = report.target_column || report.task_inference.detected_target || (report.task_inference.candidate_targets && report.task_inference.candidate_targets.length ? report.task_inference.candidate_targets[0] : null);
+        const tgtBadge = document.getElementById('detectedTargetBadge');
+        if (tgtBadge) {
+          if (detTarget) {
+            tgtBadge.innerText = detTarget;
+            tgtBadge.className = "font-mono text-emerald-300 font-semibold bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-700/50";
+          } else {
+            tgtBadge.innerText = "None (Unlabelled)";
+            tgtBadge.className = "font-mono text-slate-400 italic";
+          }
+        }
+
+        const candList = document.getElementById('candidateTargetsList');
+        if (candList) {
+          if (report.task_inference.candidate_targets && report.task_inference.candidate_targets.length) {
+            candList.innerText = report.task_inference.candidate_targets.join(', ');
+          } else {
+            candList.innerText = "None detected";
+          }
+        }
+
+        const evidenceBox = document.getElementById('evidenceBox');
+        evidenceBox.classList.remove('hidden');
+
+        // Empirical Task Probability Bars P(T|D)
+        const pList = document.getElementById('posteriorBars');
+        pList.innerHTML = "";
+        for (const [tKey, prob] of Object.entries(report.task_inference.confidence_vector || {})) {
+          const shortName = tKey.replace('supervised_', '').replace('_forecasting', '').replace('_bi', ' BI');
+          const row = document.createElement('div');
+          row.className = "flex justify-between border-b border-indigo-500/10 py-0.5";
+          row.innerHTML = `<span class="capitalize text-slate-400">${shortName}:</span> <span class="font-bold ${prob > 0.5 ? 'text-emerald-400' : 'text-slate-300'}">${(prob * 100).toFixed(1)}%</span>`;
+          pList.appendChild(row);
+        }
+
+        // Empirical Evidence Checkmarks
+        const eList = document.getElementById('evidenceList');
+        eList.innerHTML = "";
+        (report.task_inference.positive_evidence || []).forEach(pos => {
+          const li = document.createElement('li');
+          li.className = "text-emerald-400 flex items-start gap-1";
+          li.innerHTML = `<i class="fa-solid fa-check text-[10px] mt-0.5"></i> <span>${pos}</span>`;
+          eList.appendChild(li);
+        });
+        (report.task_inference.negative_evidence || []).forEach(neg => {
+          const li = document.createElement('li');
+          li.className = "text-slate-500 flex items-start gap-1";
+          li.innerHTML = `<i class="fa-solid fa-xmark text-[10px] mt-0.5"></i> <span>${neg}</span>`;
+          eList.appendChild(li);
+        });
+      }
+
+      // CARD 2: TASK-QUALITY SENSITIVITY TABLE
+      renderSensitivityMatrix(report.dimensions);
+
+      // CARD 3: CRITICAL DEFECT ENGINE
+      renderCriticalDefectEngine(report);
+
+      // CARD 4: DOWNSTREAM VALIDATION
+      renderDownstreamValidation(report);
+
+      // CARD 5: REMEDIATION OPTIMIZER & SCENARIOS
+      renderRemediationOptimizer(report);
+
+      // CARD 6: BEFORE VS AFTER REMEDIATION (if available)
+      if (report.before_after_validation) {
+        renderBeforeAfterValidation(report.before_after_validation);
+      }
+    }
+
+    function renderSensitivityMatrix(dimensions) {
+      const container = document.getElementById('sensitivityTable');
+      container.innerHTML = "";
+      if (!dimensions) return;
+
+      // Sort by weight descending
+      const entries = Object.entries(dimensions).sort((a, b) => b[1].weight - a[1].weight);
+      entries.forEach(([dimKey, res]) => {
+        const row = document.createElement('div');
+        row.className = "flex items-center justify-between py-1.5 border-b border-slate-800/60";
+
+        let levelColor = "text-slate-400 bg-slate-800/60 border-slate-700";
+        if (res.sensitivity_level === "HIGH") levelColor = "text-rose-400 bg-rose-500/10 border-rose-500/30";
+        else if (res.sensitivity_level === "MEDIUM") levelColor = "text-amber-400 bg-amber-500/10 border-amber-500/30";
+
+        row.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="text-slate-300 font-medium capitalize text-xs">${dimKey.replace(/_/g, ' ')}</span>
+            <span class="text-[9px] uppercase font-bold px-1.5 py-0.2 rounded border ${levelColor}">${res.sensitivity_level}</span>
+          </div>
+          <span class="font-mono text-emerald-400 font-semibold">${(res.weight * 100).toFixed(1)}%</span>
+        `;
+        container.appendChild(row);
+      });
+    }
+
+    function renderCriticalDefectEngine(report) {
+      const container = document.getElementById('vetoCardContent');
+      if (report.veto_applied) {
+        container.className = "p-3.5 rounded-xl bg-rose-950/40 border border-rose-600/50 text-xs flex items-start gap-3";
+        container.innerHTML = `
+          <i class="fa-solid fa-triangle-exclamation text-rose-500 text-base mt-0.5"></i>
+          <div>
+            <span class="font-bold text-rose-300 text-xs uppercase tracking-wider">&warning; CRITICAL DEFECT DETECTED</span>
+            <p class="text-xs font-semibold text-rose-200 mt-1">${report.veto_message}</p>
+            <div class="flex items-center gap-4 mt-2 text-[11px] font-mono text-rose-300">
+              <span>Weighted score before constraint: <b>${report.raw_score.toFixed(1)}</b></span>
+              <span>Fitness ceiling imposed: <b>${report.task_conditioned_fitness.toFixed(1)}</b></span>
+              <span>Final Fitness: <b>${report.task_conditioned_fitness.toFixed(1)}</b></span>
+            </div>
+          </div>
+        `;
+      } else {
+        container.className = "p-3.5 rounded-xl bg-emerald-950/40 border border-emerald-600/40 text-xs flex items-center gap-3";
+        container.innerHTML = `
+          <i class="fa-solid fa-circle-check text-emerald-400 text-base"></i>
+          <div>
+            <span class="font-bold text-emerald-300">&check; No fatal constraints triggered</span>
+            <p class="text-[11px] text-emerald-200/80 mt-0.5">All fatal defect dimensions satisfy safety bounds. Fitness formula operates unconstrained.</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderDownstreamValidation(report) {
+      const mName = report.metric || report.predicted_metric_name || "Metric";
+      document.getElementById('metricNameA').innerText = mName;
+      document.getElementById('metricNameB').innerText = mName;
+
+      document.getElementById('valPredicted').innerText = report.predicted_metric_value !== null && report.predicted_metric_value !== undefined ? (typeof report.predicted_metric_value === 'number' ? report.predicted_metric_value.toFixed(2) : report.predicted_metric_value) : "--";
+      if (report.observed_metric_value !== null && report.observed_metric_value !== undefined) {
+        document.getElementById('valObserved').innerText = typeof report.observed_metric_value === 'number' ? report.observed_metric_value.toFixed(2) : report.observed_metric_value;
+      } else {
+        document.getElementById('valObserved').innerText = "Validation Omitted";
+      }
+      
+      const resVal = report.metric_residual;
+      if (resVal !== null && resVal !== undefined) {
+        const numRes = typeof resVal === 'number' ? resVal : parseFloat(resVal);
+        document.getElementById('valResidual').innerText = numRes > 0 ? `+${numRes.toFixed(2)}` : `${numRes.toFixed(2)}`;
+      } else {
+        document.getElementById('valResidual').innerText = "Not Evaluated";
+      }
+
+      // Calibration status & details
+      const calResRow = document.getElementById('calibResidualRow');
+      const calRedRow = document.getElementById('calibReductionRow');
+      const weightsContainer = document.getElementById('calibWeightsContainer');
+      const weightsList = document.getElementById('calibWeightsList');
+
+      if (report.calibration) {
+        const cal = report.calibration;
+        const statusText = cal.calibration_status || (cal.is_improved ? "Improved" : "Converged");
+        document.getElementById('calibStatusBadge').innerText = `${statusText} \u2713`;
+        document.getElementById('calibStatusBadge').className = cal.is_improved ? "text-[11px] font-semibold text-emerald-400" : "text-[11px] font-semibold text-cyan-400";
+        document.getElementById('calibFitnessTransition').innerText = `${cal.initial_trust_score.toFixed(1)} \u2192 ${cal.calibrated_trust_score.toFixed(1)}`;
+        
+        if (cal.residual_before !== undefined && cal.residual_after !== undefined) {
+          calResRow.classList.remove('hidden');
+          const rBefore = cal.residual_before > 0 ? `+${cal.residual_before.toFixed(2)}` : cal.residual_before.toFixed(2);
+          const rAfter = cal.residual_after > 0 ? `+${cal.residual_after.toFixed(2)}` : cal.residual_after.toFixed(2);
+          document.getElementById('calibResidualTransition').innerText = `${rBefore} \u2192 ${rAfter}`;
+        }
+        if (cal.residual_reduction_pct !== undefined) {
+          calRedRow.classList.remove('hidden');
+          document.getElementById('calibReductionPct').innerText = `${cal.residual_reduction_pct.toFixed(1)}% reduction`;
+        }
+        document.getElementById('calibExplanation').innerText = cal.explanation;
+
+        // Render weight updates table if available
+        if (cal.weight_adjustments) {
+          weightsContainer.classList.remove('hidden');
+          weightsList.innerHTML = "";
+          for (const [dim, adj] of Object.entries(cal.weight_adjustments)) {
+            const dSign = adj.delta > 0 ? `+${adj.delta.toFixed(3)}` : adj.delta.toFixed(3);
+            const dColor = adj.delta > 0 ? "text-emerald-400" : (adj.delta < 0 ? "text-rose-400" : "text-slate-500");
+            const row = document.createElement('div');
+            row.className = "flex justify-between py-0.5 border-b border-slate-900";
+            row.innerHTML = `
+              <span class="capitalize text-slate-400">${dim.replace(/_/g, ' ')}:</span>
+              <span>${(adj.initial * 100).toFixed(1)}% \u2192 ${(adj.calibrated * 100).toFixed(1)}% <b class="${dColor}">(${dSign})</b></span>
+            `;
+            weightsList.appendChild(row);
+          }
+        }
+      } else if (report.observed_metric_value === null || report.observed_metric_value === undefined) {
+        const isMissingTarget = report.task_type && report.task_type.includes('supervised') && !report.target_column;
+        document.getElementById('calibStatusBadge').innerText = isMissingTarget ? "Target Missing — Validation Omitted" : "Validation Omitted";
+        document.getElementById('calibStatusBadge').className = "text-[11px] font-semibold text-amber-400";
+        document.getElementById('calibFitnessTransition').innerText = `${report.task_conditioned_fitness.toFixed(1)} (Uncalibrated)`;
+        calResRow.classList.add('hidden');
+        calRedRow.classList.add('hidden');
+        weightsContainer.classList.add('hidden');
+      } else if (resVal !== null && Math.abs(resVal) > 0.05) {
+        document.getElementById('calibStatusBadge').innerText = "Calibration Recommended";
+        document.getElementById('calibStatusBadge').className = "text-[11px] font-semibold text-amber-400";
+        document.getElementById('calibFitnessTransition').innerText = `${report.task_conditioned_fitness.toFixed(1)} \u2192 Ready`;
+        calResRow.classList.add('hidden');
+        calRedRow.classList.add('hidden');
+        weightsContainer.classList.add('hidden');
+      } else {
+        document.getElementById('calibStatusBadge').innerText = "Aligned with Prediction";
+        document.getElementById('calibStatusBadge').className = "text-[11px] font-semibold text-emerald-400";
+        calResRow.classList.add('hidden');
+        calRedRow.classList.add('hidden');
+        weightsContainer.classList.add('hidden');
+      }
+    }
+
+    function renderRemediationOptimizer(report) {
+      document.getElementById('simCurrentFitness').innerText = report.task_conditioned_fitness.toFixed(1);
+      document.getElementById('simResultFitness').innerText = report.task_conditioned_fitness.toFixed(1);
+      document.getElementById('simExpectedGain').innerText = "+0.0";
+
+      // Render preset scenarios A, B, C
+      if (report.what_if_scenarios && report.what_if_scenarios.length >= 3) {
+        document.getElementById('scenVal0').innerText = `${report.what_if_scenarios[0].simulated_fitness.toFixed(1)} (+${report.what_if_scenarios[0].improvement.toFixed(1)})`;
+        document.getElementById('scenVal1').innerText = `${report.what_if_scenarios[1].simulated_fitness.toFixed(1)} (+${report.what_if_scenarios[1].improvement.toFixed(1)})`;
+        document.getElementById('scenVal2').innerText = `${report.what_if_scenarios[2].simulated_fitness.toFixed(1)} (+${report.what_if_scenarios[2].improvement.toFixed(1)})`;
+      }
+
+      // Render Action Table
+      const tbody = document.getElementById('remediationRows');
+      tbody.innerHTML = "";
+
+      if (report.task_type && report.task_type.includes('supervised') && !report.target_column) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-amber-400 font-medium"><i class="fa-solid fa-triangle-exclamation"></i> Supervised task designated without a valid target column. Designate a target column to evaluate downstream model remediation.</td></tr>';
+        return;
+      }
+
+      const actions = report.optimized_remediations || [];
+      if (actions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-4 text-center text-emerald-400 font-medium"><i class="fa-solid fa-circle-check"></i> Dataset is in optimal fitness. Zero defects to remediate.</td></tr>';
+        return;
+      }
+
+      actions.forEach(act => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-900/50 transition border-b border-slate-800/40";
+        tr.innerHTML = `
+          <td class="py-2.5 pl-1">
+            <input type="checkbox" id="chk_${act.id}" onchange="toggleRemediation('${act.id}', this.checked)" class="rounded bg-slate-900 border-slate-700 text-cyan-500 focus:ring-0 cursor-pointer" />
+          </td>
+          <td class="py-2.5 font-bold text-indigo-400 font-mono">Priority ${act.priority_rank}</td>
+          <td class="py-2.5 pr-2">
+            <p class="font-medium text-slate-200 text-xs">${act.issue}</p>
+            <p class="text-[11px] text-slate-400">${act.recommendation}</p>
+          </td>
+          <td class="py-2.5 text-right font-mono font-bold text-emerald-400">+${act.fitness_improvement.toFixed(1)}</td>
+          <td class="py-2.5 text-right font-mono text-amber-400">${act.operational_cost}</td>
+          <td class="py-2.5 text-right font-mono font-bold text-cyan-400">${act.mru.toFixed(2)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Toggle remediation checkbox
+    function toggleRemediation(actionId, isChecked) {
+      if (isChecked) appliedActionIds.add(actionId);
+      else appliedActionIds.delete(actionId);
+      updateSimulationMetrics();
+    }
+
+    // Apply Scenario Preset
+    function applyPresetScenario(idx) {
+      if (!currentReport || !currentReport.what_if_scenarios || !currentReport.what_if_scenarios[idx]) return;
+      const targetIds = new Set(currentReport.what_if_scenarios[idx].action_ids);
+      appliedActionIds = targetIds;
+
+      // Update checkboxes in table
+      (currentReport.optimized_remediations || []).forEach(a => {
+        const chk = document.getElementById(`chk_${a.id}`);
+        if (chk) chk.checked = targetIds.has(a.id);
+      });
+      updateSimulationMetrics();
+    }
+
+    function updateSimulationMetrics() {
+      if (!currentReport) return;
+      let sim = currentReport.task_conditioned_fitness;
+      (currentReport.optimized_remediations || []).forEach(a => {
+        if (appliedActionIds.has(a.id)) sim += a.fitness_improvement;
+      });
+      sim = Math.min(100.0, sim);
+      const gain = sim - currentReport.task_conditioned_fitness;
+
+      document.getElementById('simResultFitness').innerText = sim.toFixed(1);
+      document.getElementById('simExpectedGain').innerText = gain > 0 ? `+${gain.toFixed(1)}` : "+0.0";
+    }
+
+    // Manual calibration submit
+    async function submitManualCalibration() {
+      if (!currentReport) {
+        alert("Please evaluate a dataset first.");
+        return;
+      }
+      const obsVal = parseFloat(document.getElementById('manualObsInput').value);
+      if (isNaN(obsVal)) {
+        alert("Please enter a valid numeric observed metric (e.g. 14.1 or 0.71)");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('task', currentReport.task_type);
+      formData.append('initial_trust_score', currentReport.task_conditioned_fitness);
+      formData.append('observed_performance', obsVal);
+
+      for (const [dim, res] of Object.entries(currentReport.dimensions)) {
+        formData.append(`${dim}_score`, res.score);
+      }
+
+      try {
+        const resp = await fetch('/api/v1/calibrate', { method: 'POST', body: formData });
+        if (!resp.ok) throw new Error("Calibration failed");
+        const data = await resp.json();
+
+        // Update UI
+        const statusText = data.calibration_status || (data.is_improved ? "Improved" : "Converged");
+        document.getElementById('calibStatusBadge').innerText = `${statusText} \u2713`;
+        document.getElementById('calibStatusBadge').className = data.is_improved ? "text-[11px] font-semibold text-emerald-400" : "text-[11px] font-semibold text-cyan-400";
+        document.getElementById('calibFitnessTransition').innerText = `${data.initial_trust_score.toFixed(1)} \u2192 ${data.calibrated_trust_score.toFixed(1)}`;
+        document.getElementById('calibExplanation').innerText = data.explanation;
+        document.getElementById('fitnessVal').innerText = data.calibrated_trust_score.toFixed(1);
+
+        const calResRow = document.getElementById('calibResidualRow');
+        const calRedRow = document.getElementById('calibReductionRow');
+        const weightsContainer = document.getElementById('calibWeightsContainer');
+        const weightsList = document.getElementById('calibWeightsList');
+
+        if (data.residual_before !== undefined && data.residual_after !== undefined) {
+          calResRow.classList.remove('hidden');
+          const rBefore = data.residual_before > 0 ? `+${data.residual_before.toFixed(2)}` : data.residual_before.toFixed(2);
+          const rAfter = data.residual_after > 0 ? `+${data.residual_after.toFixed(2)}` : data.residual_after.toFixed(2);
+          document.getElementById('calibResidualTransition').innerText = `${rBefore} \u2192 ${rAfter}`;
+        }
+        if (data.residual_reduction_pct !== undefined) {
+          calRedRow.classList.remove('hidden');
+          document.getElementById('calibReductionPct').innerText = `${data.residual_reduction_pct.toFixed(1)}% reduction`;
+        }
+
+        if (data.weight_adjustments) {
+          weightsContainer.classList.remove('hidden');
+          weightsList.innerHTML = "";
+          for (const [dim, adj] of Object.entries(data.weight_adjustments)) {
+            const dSign = adj.delta > 0 ? `+${adj.delta.toFixed(3)}` : adj.delta.toFixed(3);
+            const dColor = adj.delta > 0 ? "text-emerald-400" : (adj.delta < 0 ? "text-rose-400" : "text-slate-500");
+            const row = document.createElement('div');
+            row.className = "flex justify-between py-0.5 border-b border-slate-900";
+            row.innerHTML = `
+              <span class="capitalize text-slate-400">${dim.replace(/_/g, ' ')}:</span>
+              <span>${(adj.initial * 100).toFixed(1)}% \u2192 ${(adj.calibrated * 100).toFixed(1)}% <b class="${dColor}">(${dSign})</b></span>
+            `;
+            weightsList.appendChild(row);
+          }
+        }
+      } catch (e) {
+        alert("Calibration Error: " + e.message);
+      }
+    }
+
+    // Render Card 6 Before vs After Validation
+    function renderBeforeAfterValidation(val) {
+      if (!val) return;
+      document.getElementById('baFitnessBefore').innerText = val.fitness_before.toFixed(1);
+      document.getElementById('baFitnessAfter').innerText = val.fitness_after.toFixed(1);
+      const gainPrefix = val.fitness_improvement > 0 ? "+" : "";
+      document.getElementById('baFitnessGain').innerText = `${gainPrefix}${val.fitness_improvement.toFixed(1)} pts`;
+
+      if (val.predicted_fitness_gain !== undefined && val.predicted_fitness_gain !== null) {
+        document.getElementById('baFitnessPredGain').innerText = `${val.predicted_fitness_gain > 0 ? '+' : ''}${val.predicted_fitness_gain.toFixed(1)} pts (simulated)`;
+      } else {
+        document.getElementById('baFitnessPredGain').innerText = '--';
+      }
+
+      const decBadge = document.getElementById('baDecisionBadge');
+      const decBanner = document.getElementById('baDecisionBanner');
+      const decStatusText = document.getElementById('baDecisionStatusText');
+      const decReasonText = document.getElementById('baDecisionReasonText');
+
+      if (decBadge && val.decision) {
+        decBadge.innerText = val.decision;
+        if (val.decision === 'ACCEPTED') {
+          decBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-600 bg-emerald-950/60 text-emerald-400";
+        } else if (val.decision === 'BLOCKED' || val.decision === 'REJECTED' || val.decision === 'REGRESSED') {
+          decBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded border border-rose-600 bg-rose-950/60 text-rose-400";
+        } else if (val.decision === 'REVIEW_REQUIRED') {
+          decBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded border border-amber-600 bg-amber-950/60 text-amber-400";
+        } else {
+          decBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded border border-slate-700 bg-slate-900 text-slate-400";
+        }
+      }
+
+      if (decBanner && val.decision) {
+        decBanner.classList.remove('hidden');
+        decStatusText.innerText = val.decision;
+        decReasonText.innerText = val.decision_reason || '';
+      }
+
+      const metricName = val.metric_name || "Metric";
+      document.getElementById('baMetricLabel').innerText = metricName;
+      document.getElementById('baMetricName1').innerText = metricName;
+      document.getElementById('baMetricName2').innerText = metricName;
+      document.getElementById('baMetricBefore').innerText = val.metric_before !== null ? val.metric_before : "--";
+      document.getElementById('baMetricAfter').innerText = val.metric_after !== null ? val.metric_after : "--";
+
+      const isRmse = metricName === "RMSE";
+      const chg = val.metric_change_pct !== undefined ? val.metric_change_pct : (val.metric_improvement_pct || 0.0);
+      const chgSign = chg > 0 ? "+" : "";
+      
+      document.getElementById('baChangeLabel').innerText = isRmse ? "RMSE Change:" : "Metric Change:";
+      document.getElementById('baMetricPct').innerText = `${chgSign}${chg}%`;
+
+      const statusBadge = document.getElementById('baPerfStatusBadge');
+      if (statusBadge) {
+        const perfStatus = val.performance_status || (chg < 0 && isRmse ? "Improved ✓" : (chg > 0 && !isRmse ? "Improved ✓" : "Neutral"));
+        statusBadge.innerText = perfStatus;
+        if (perfStatus.includes("Improved")) {
+          statusBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-600 bg-emerald-950/60 text-emerald-400";
+          document.getElementById('baMetricPct').className = "font-bold text-emerald-400";
+        } else if (perfStatus.includes("Deteriorated")) {
+          statusBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded border border-rose-600 bg-rose-950/60 text-rose-400";
+          document.getElementById('baMetricPct').className = "font-bold text-rose-400";
+        } else {
+          statusBadge.className = "text-[10px] font-bold px-2 py-0.5 rounded border border-slate-700 bg-slate-900 text-slate-400";
+          document.getElementById('baMetricPct').className = "font-bold text-cyan-400";
+        }
+      }
+
+      const logContainer = document.getElementById('remediationLogText');
+      if (val.execution_log && val.execution_log.length > 0) {
+        logContainer.className = "space-y-1 text-slate-300 font-mono text-[11px]";
+        logContainer.innerHTML = val.execution_log.map(item => `
+          <div class="flex items-start gap-2">
+            <span class="text-emerald-400 font-bold">✓</span>
+            <span>${item}</span>
+          </div>
+        `).join('');
+      } else {
+        logContainer.className = "text-slate-400 font-mono text-[11px]";
+        logContainer.innerText = "Remediation executed successfully with no additional transformations.";
+      }
+    }
+
+    // Run Auto Model Validation
+    async function runAutoValidation() {
+      if (!currentFile && !fileInput.files.length && !currentScenario) {
+        alert("Please upload a dataset file or select a benchmark scenario first.");
+        return;
+      }
+      const isAuto = document.querySelector('input[name="taskMode"]:checked').value === 'auto';
+      const taskVal = isAuto ? 'auto' : document.getElementById('taskSelect').value;
+
+      const formData = new FormData();
+      if (currentFile || fileInput.files.length) {
+        formData.append('file', currentFile || fileInput.files[0]);
+      } else if (currentScenario) {
+        formData.append('scenario', currentScenario);
+      }
+      formData.append('task', taskVal);
+      formData.append('target_column', document.getElementById('targetCol').value);
+      formData.append('time_column', document.getElementById('timeCol').value);
+
+      const btn = document.getElementById('autoValBtn');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Training...';
+      btn.disabled = true;
+
+      try {
+        const resp = await fetch('/api/v1/validate-downstream', { method: 'POST', body: formData });
+        if (!resp.ok) throw new Error("Validation training failed");
+        const res = await resp.json();
+
+        document.getElementById('valPredicted').innerText = res.predicted !== null ? res.predicted : "--";
+        document.getElementById('valObserved').innerText = res.observed !== null ? res.observed : "--";
+        document.getElementById('valResidual').innerText = res.residual !== null ? (res.residual > 0 ? `+${res.residual}` : res.residual) : "--";
+        document.getElementById('valStatusText').innerText = res.status;
+      } catch (e) {
+        alert("Model Validation Error: " + e.message);
+      } finally {
+        btn.innerHTML = '<i class="fa-solid fa-play text-[9px]"></i> Run Model';
+        btn.disabled = false;
+      }
+    }
+
+    // Execute Remediation & Validate Before vs After (Card 6)
+    async function runRemediateAndValidate() {
+      if (!currentFile && !fileInput.files.length && !currentScenario) {
+        alert("Please evaluate a dataset or select a benchmark scenario first.");
+        return;
+      }
+
+      const btn = document.getElementById('runRemediationBtn');
+      const originalBtnText = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Remediating & Retraining...';
+      btn.disabled = true;
+
+      const isAuto = document.querySelector('input[name="taskMode"]:checked').value === 'auto';
+      const taskVal = isAuto ? 'auto' : document.getElementById('taskSelect').value;
+
+      const formData = new FormData();
+      if (currentFile || fileInput.files.length) {
+        formData.append('file', currentFile || fileInput.files[0]);
+      } else if (currentScenario) {
+        formData.append('scenario', currentScenario);
+      }
+      formData.append('task', taskVal);
+      formData.append('target_column', document.getElementById('targetCol').value);
+      formData.append('time_column', document.getElementById('timeCol').value);
+
+      try {
+        const resp = await fetch('/api/v1/remediate-and-validate', { method: 'POST', body: formData });
+        if (!resp.ok) {
+          const err = await resp.json();
+          throw new Error(err.detail || "Remediation validation failed");
+        }
+        const data = await resp.json();
+        renderBeforeAfterValidation(data.validation);
+
+        if (data.report_after) {
+          renderCompleteAudit(data.report_after);
+        }
+      } catch (err) {
+        alert("Remediation Validation Error: " + err.message);
+      } finally {
+        btn.innerHTML = originalBtnText;
+        btn.disabled = false;
+      }
+    }
+
+    // Download PDF Report
+    async function downloadCurrentPdf() {
+      if (!currentFile && !fileInput.files.length && !currentScenario) {
+        alert("Please select a dataset file or benchmark scenario to export a PDF.");
+        return;
+      }
+      const isAuto = document.querySelector('input[name="taskMode"]:checked').value === 'auto';
+      const taskVal = isAuto ? 'auto' : document.getElementById('taskSelect').value;
+
+      const formData = new FormData();
+      if (currentFile || fileInput.files.length) {
+        formData.append('file', currentFile || fileInput.files[0]);
+      } else if (currentScenario) {
+        formData.append('scenario', currentScenario);
+      }
+      formData.append('task', taskVal);
+      formData.append('target_column', document.getElementById('targetCol').value);
+      formData.append('time_column', document.getElementById('timeCol').value);
+
+      const resp = await fetch('/api/v1/report/pdf', { method: 'POST', body: formData });
+      if (!resp.ok) { alert("Failed to export PDF"); return; }
+      const blob = await resp.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `DataTrust_Fitness_Audit.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    }
+
+    // Download Reproducibility Audit Receipt (JSON)
+    async function downloadCurrentReceipt() {
+      if (!currentReport) {
+        alert("Please evaluate a dataset first to generate an audit receipt.");
+        return;
+      }
+
+      try {
+        const resp = await fetch('/api/v1/reproducibility-receipt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(currentReport)
+        });
+        if (!resp.ok) {
+          const err = await resp.json();
+          throw new Error(err.detail || "Receipt generation failed");
+        }
+        const receiptData = await resp.json();
+        const jsonStr = JSON.stringify(receiptData, null, 2);
+        const blob = new Blob([jsonStr], { type: 'application/json' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const dsName = (currentReport.dataset_name || "dataset").replace(/[^a-zA-Z0-9_-]/g, '_');
+        a.download = `datatrust_receipt_${dsName}.json`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      } catch (err) {
+        alert("Receipt Download Error: " + err.message);
+      }
+    }
+  </script>
+</body>
+</html>

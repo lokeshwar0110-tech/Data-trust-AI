@@ -1,0 +1,9 @@
+dataset,dataset_id,tier,task,metric_name,policy_masked,fitness_before,fitness_after,delta_fitness,calibration_metric,outer_test_metric,predicted_metric_before,predicted_metric_after,abs_error_before,abs_error_after,delta_abs_error,relative_error_reduction,relative_error_reduction_pct
+Breast Cancer Diagnostic,C3_breast_cancer,Tier C (Held-Out Generalization),supervised_classification,Macro F1,True,70.0,70.0,0.0,0.9429,0.9432,0.62,0.62,0.3232,0.3232,0.0,0.0,0.00%
+California Housing,C1_cal_housing,Tier C (Held-Out Generalization),supervised_regression,RMSE,True,70.0,70.0,0.0,0.4072,0.4489,0.564,0.564,0.1151,0.1151,0.0,0.0,0.00%
+Diabetes Progression,C2_diabetes,Tier C (Held-Out Generalization),supervised_regression,RMSE,False,96.37,90.4,-5.97,59.373,56.6163,19.684,26.608,36.9323,30.0083,-6.924,0.1875,18.75%
+Iris Species Morphometrics,B4_iris_species,Tier B (Diagnostic Benchmark),supervised_classification,Macro F1,True,70.0,70.0,0.0,0.9515,0.9707,0.62,0.62,0.3507,0.3507,0.0,0.0,0.00%
+Melbourne Daily Temperatures,B3_melb_temperatures,Tier B (Diagnostic Benchmark),time_series_forecasting,RMSE,False,96.68,90.4,-6.28,2.5385,2.3761,1.04,1.43,1.3361,0.9461,-0.39,0.2919,29.19%
+Retail Store Sales,C4_retail_sales,Tier C (Held-Out Generalization),supervised_regression,RMSE,False,93.26,44.38,-48.88,284.8815,277.1295,73.498,252.468,203.6315,28.4606,-175.1709,0.8602,86.02%
+UCI Air Quality Sensors,B2_air_quality,Tier B (Calibration Benchmark),time_series_forecasting,RMSE,True,70.0,70.0,0.0,50.9061,54.1429,40.03,40.03,14.1129,14.1129,0.0,0.0,0.00%
+UCI Red Wine Quality,B1_wine_quality,Tier B (Calibration Benchmark),supervised_regression,RMSE,True,70.0,70.0,0.0,0.5953,0.5996,0.526,0.526,0.0736,0.0736,0.0,0.0,0.00%

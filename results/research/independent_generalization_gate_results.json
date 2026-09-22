@@ -1,0 +1,655 @@
+{
+  "framework": "DataTrust AI v3 Independent Generalization Validation Gate",
+  "dataset_count": 11,
+  "results": [
+    {
+      "dataset": "California Housing",
+      "dataset_id": "A1_cal_housing",
+      "category": "A. Regression",
+      "domain": "Real Estate / Demographics",
+      "rows": 1500,
+      "cols": 9,
+      "task": "supervised_regression",
+      "inferred_task": "supervised_regression",
+      "task_confidence": 0.94,
+      "p_task_given_data": {
+        "supervised_regression": 0.94,
+        "supervised_classification": 0.015,
+        "time_series_forecasting": 0.015,
+        "clustering": 0.03
+      },
+      "target": "MedHouseVal",
+      "time_column": null,
+      "model_family": "Random Forest Regressor",
+      "metric_name": "RMSE",
+      "raw_fitness": 94.7,
+      "final_fitness": 70.0,
+      "defect_tier": "YELLOW",
+      "fitness_status": "WARNING",
+      "predicted_metric": 0.57,
+      "observed_metric": 0.38,
+      "residual": -0.19,
+      "calibration_status": "Calibration Improved",
+      "calibration_provenance": "EMPIRICALLY_CALIBRATED",
+      "remediation_status": "Policy Veto Enforced",
+      "uncertainty": "[69.5, 70.5] (SE=0.23)",
+      "uncertainty_se": 0.23,
+      "validation_status": "Successfully Evaluated"
+    },
+    {
+      "dataset": "Diabetes Progression",
+      "dataset_id": "A2_diabetes",
+      "category": "A. Regression",
+      "domain": "Biomedical / Clinical",
+      "rows": 442,
+      "cols": 11,
+      "task": "supervised_regression",
+      "inferred_task": "supervised_regression",
+      "task_confidence": 0.94,
+      "p_task_given_data": {
+        "supervised_regression": 0.94,
+        "supervised_classification": 0.015,
+        "time_series_forecasting": 0.015,
+        "clustering": 0.03
+      },
+      "target": "disease_progression",
+      "time_column": null,
+      "model_family": "Random Forest Regressor",
+      "metric_name": "RMSE",
+      "raw_fitness": 96.4,
+      "final_fitness": 90.0,
+      "defect_tier": "GREEN",
+      "fitness_status": "NORMAL",
+      "predicted_metric": 19.58,
+      "observed_metric": 52.84,
+      "residual": 33.26,
+      "calibration_status": "Calibration Improved",
+      "calibration_provenance": "EMPIRICALLY_CALIBRATED",
+      "remediation_status": "No Remediation Required",
+      "uncertainty": "[85.1, 94.9] (SE=2.51)",
+      "uncertainty_se": 2.51,
+      "validation_status": "Successfully Evaluated"
+    },
+    {
+      "dataset": "Breast Cancer Diagnostic",
+      "dataset_id": "B1_breast_cancer",
+      "category": "B. Classification",
+      "domain": "Oncology / Pathology",
+      "rows": 569,
+      "cols": 31,
+      "task": "supervised_classification",
+      "inferred_task": "supervised_classification",
+      "task_confidence": 0.94,
+      "p_task_given_data": {
+        "supervised_regression": 0.015,
+        "supervised_classification": 0.94,
+        "time_series_forecasting": 0.015,
+        "clustering": 0.03
+      },
+      "target": "biopsy_result",
+      "time_column": null,
+      "model_family": "Random Forest Classifier",
+      "metric_name": "F1",
+      "raw_fitness": 88.4,
+      "final_fitness": 70.0,
+      "defect_tier": "YELLOW",
+      "fitness_status": "WARNING",
+      "predicted_metric": 0.62,
+      "observed_metric": 0.97,
+      "residual": 0.35,
+      "calibration_status": "Calibration Improved",
+      "calibration_provenance": "EMPIRICALLY_CALIBRATED",
+      "remediation_status": "Policy Veto Enforced",
+      "uncertainty": "[69.3, 70.7] (SE=0.35)",
+      "uncertainty_se": 0.35,
+      "validation_status": "Successfully Evaluated"
+    },
+    {
+      "dataset": "Iris Species Morphometrics",
+      "dataset_id": "B2_iris",
+      "category": "B. Classification",
+      "domain": "Botanical / Ecology",
+      "rows": 150,
+      "cols": 5,
+      "task": "supervised_classification",
+      "inferred_task": "supervised_classification",
+      "task_confidence": 0.94,
+      "p_task_given_data": {
+        "supervised_regression": 0.015,
+        "supervised_classification": 0.94,
+        "time_series_forecasting": 0.015,
+        "clustering": 0.03
+      },
+      "target": "variety",
+      "time_column": null,
+      "model_family": "Random Forest Classifier",
+      "metric_name": "F1",
+      "raw_fitness": 95.6,
+      "final_fitness": 70.0,
+      "defect_tier": "YELLOW",
+      "fitness_status": "WARNING",
+      "predicted_metric": 0.62,
+      "observed_metric": 1.0,
+      "residual": 0.38,
+      "calibration_status": "Calibration Improved",
+      "calibration_provenance": "EMPIRICALLY_CALIBRATED",
+      "remediation_status": "Policy Veto Enforced",
+      "uncertainty": "[69.5, 70.5] (SE=0.22)",
+      "uncertainty_se": 0.22,
+      "validation_status": "Successfully Evaluated"
+    },
+    {
+      "dataset": "Melbourne Daily Temperatures",
+      "dataset_id": "C1_melb_temperatures",
+      "category": "C. Time-Series Forecasting",
+      "domain": "Meteorology / Climate",
+      "rows": 3650,
+      "cols": 2,
+      "task": "time_series_forecasting",
+      "inferred_task": "time_series_forecasting",
+      "task_confidence": 0.887,
+      "p_task_given_data": {
+        "supervised_regression": 0.079,
+        "supervised_classification": 0.011,
+        "time_series_forecasting": 0.887,
+        "clustering": 0.023
+      },
+      "target": "Temp",
+      "time_column": "Date",
+      "model_family": "Autoregressive / Lagged Regression",
+      "metric_name": "RMSE",
+      "raw_fitness": 96.7,
+      "final_fitness": 91.8,
+      "defect_tier": "GREEN",
+      "fitness_status": "NORMAL",
+      "predicted_metric": 1.02,
+      "observed_metric": 2.46,
+      "residual": 1.44,
+      "calibration_status": "Calibration Improved",
+      "calibration_provenance": "EMPIRICALLY_CALIBRATED",
+      "remediation_status": "No Remediation Required",
+      "uncertainty": "[91.1, 92.5] (SE=0.36)",
+      "uncertainty_se": 0.36,
+      "validation_status": "Successfully Evaluated"
+    },
+    {
+      "dataset": "Air Quality Sensors",
+      "dataset_id": "C2_air_quality",
+      "category": "C. Time-Series Forecasting",
+      "domain": "Environmental Chemistry",
+      "rows": 1500,
+      "cols": 16,
+      "task": "time_series_forecasting",
+      "inferred_task": "time_series_forecasting",
+      "task_confidence": 0.887,
+      "p_task_given_data": {
+        "supervised_regression": 0.079,
+        "supervised_classification": 0.011,
+        "time_series_forecasting": 0.887,
+        "clustering": 0.023
+      },
+      "target": "CO(GT)",
+      "time_column": "timestamp",
+      "model_family": "Autoregressive / Lagged Regression",
+      "metric_name": "RMSE",
+      "raw_fitness": 90.3,
+      "final_fitness": 70.0,
+      "defect_tier": "YELLOW",
+      "fitness_status": "WARNING",
+      "predicted_metric": 53.07,
+      "observed_metric": 36.09,
+      "residual": -16.98,
+      "calibration_status": "Calibration Improved",
+      "calibration_provenance": "EMPIRICALLY_CALIBRATED",
+      "remediation_status": "Policy Veto Enforced",
+      "uncertainty": "[65.9, 74.1] (SE=2.07)",
+      "uncertainty_se": 2.07,
+      "validation_status": "Successfully Evaluated"
+    },
+    {
+      "dataset": "Spatial Coordinate Clusters",
+      "dataset_id": "D1_coord_clustering",
+      "category": "D. Clustering",
+      "domain": "Geometric / Spatial",
+      "rows": 250,
+      "cols": 4,
+      "task": "clustering",
+      "inferred_task": "clustering",
+      "task_confidence": 0.55,
+      "p_task_given_data": {
+        "supervised_regression": 0.15,
+        "supervised_classification": 0.15,
+        "time_series_forecasting": 0.15,
+        "clustering": 0.55
+      },
+      "target": null,
+      "time_column": null,
+      "model_family": "K-Means Clustering",
+      "metric_name": "Silhouette Score",
+      "raw_fitness": 96.7,
+      "final_fitness": 89.3,
+      "defect_tier": "GREEN",
+      "fitness_status": "NORMAL",
+      "predicted_metric": 0.62,
+      "observed_metric": 0.18,
+      "residual": -0.44,
+      "calibration_status": "Calibration Improved",
+      "calibration_provenance": "EMPIRICALLY_CALIBRATED",
+      "remediation_status": "No Remediation Required",
+      "uncertainty": "[87.1, 91.5] (SE=1.14)",
+      "uncertainty_se": 1.14,
+      "validation_status": "Successfully Evaluated"
+    },
+    {
+      "dataset": "Academic Institution Profiles",
+      "dataset_id": "D2_univ_clustering",
+      "category": "D. Clustering",
+      "domain": "Higher Education / Profiles",
+      "rows": 25,
+      "cols": 6,
+      "task": "clustering",
+      "inferred_task": "supervised_regression",
+      "task_confidence": 0.94,
+      "p_task_given_data": {
+        "supervised_regression": 0.94,
+        "supervised_classification": 0.015,
+        "time_series_forecasting": 0.015,
+        "clustering": 0.03
+      },
+      "target": null,
+      "time_column": null,
+      "model_family": "K-Means Clustering",
+      "metric_name": "Silhouette Score",
+      "raw_fitness": 87.3,
+      "final_fitness": 75.8,
+      "defect_tier": "GREEN",
+      "fitness_status": "NORMAL",
+      "predicted_metric": 0.54,
+      "observed_metric": 0.42,
+      "residual": -0.12,
+      "calibration_status": "Calibration Improved",
+      "calibration_provenance": "EMPIRICALLY_CALIBRATED",
+      "remediation_status": "No Remediation Required",
+      "uncertainty": "[75.2, 76.4] (SE=0.33)",
+      "uncertainty_se": 0.33,
+      "validation_status": "Successfully Evaluated"
+    },
+    {
+      "dataset": "Retail Store Transactions",
+      "dataset_id": "E1_retail_transactions",
+      "category": "E. Transaction / Tabular with Date",
+      "domain": "Commercial / Retail Sales",
+      "rows": 350,
+      "cols": 6,
+      "task": "supervised_regression",
+      "inferred_task": "supervised_regression",
+      "task_confidence": 0.864,
+      "p_task_given_data": {
+        "supervised_regression": 0.864,
+        "supervised_classification": 0.014,
+        "time_series_forecasting": 0.095,
+        "clustering": 0.027
+      },
+      "target": "sales_amount",
+      "time_column": "order_date",
+      "model_family": "Random Forest Regressor",
+      "metric_name": "RMSE",
+      "raw_fitness": 92.7,
+      "final_fitness": 49.7,
+      "defect_tier": "GREEN",
+      "fitness_status": "NORMAL",
+      "predicted_metric": 74.97,
+      "observed_metric": 242.61,
+      "residual": 167.64,
+      "calibration_status": "Calibration Improved",
+      "calibration_provenance": "EMPIRICALLY_CALIBRATED",
+      "remediation_status": "No Remediation Required",
+      "uncertainty": "[44.7, 54.7] (SE=2.53)",
+      "uncertainty_se": 2.53,
+      "validation_status": "Successfully Evaluated"
+    },
+    {
+      "dataset": "Messy Telemetry (Warning Cap)",
+      "dataset_id": "F1_messy_warning_cap",
+      "category": "F. Noisy / Messy",
+      "domain": "Industrial IoT / Telemetry",
+      "rows": 250,
+      "cols": 4,
+      "task": "supervised_classification",
+      "inferred_task": "supervised_classification",
+      "task_confidence": 0.94,
+      "p_task_given_data": {
+        "supervised_regression": 0.015,
+        "supervised_classification": 0.94,
+        "time_series_forecasting": 0.015,
+        "clustering": 0.03
+      },
+      "target": "failure_status",
+      "time_column": null,
+      "model_family": "Random Forest Classifier",
+      "metric_name": "F1",
+      "raw_fitness": 88.1,
+      "final_fitness": 65.0,
+      "defect_tier": "YELLOW",
+      "fitness_status": "WARNING",
+      "predicted_metric": 0.57,
+      "observed_metric": 0.84,
+      "residual": 0.27,
+      "calibration_status": "Calibration Improved",
+      "calibration_provenance": "EMPIRICALLY_CALIBRATED",
+      "remediation_status": "Policy Veto Enforced",
+      "uncertainty": "[64.3, 65.7] (SE=0.36)",
+      "uncertainty_se": 0.36,
+      "validation_status": "Successfully Evaluated"
+    },
+    {
+      "dataset": "Corrupted Fraud Log (Hard Veto)",
+      "dataset_id": "F2_fatal_hard_veto",
+      "category": "F. Noisy / Messy",
+      "domain": "Financial Security",
+      "rows": 300,
+      "cols": 4,
+      "task": "supervised_classification",
+      "inferred_task": "supervised_classification",
+      "task_confidence": 0.94,
+      "p_task_given_data": {
+        "supervised_regression": 0.015,
+        "supervised_classification": 0.94,
+        "time_series_forecasting": 0.015,
+        "clustering": 0.03
+      },
+      "target": "fraud_class",
+      "time_column": null,
+      "model_family": "Random Forest Classifier",
+      "metric_name": "F1",
+      "raw_fitness": 80.9,
+      "final_fitness": 0.0,
+      "defect_tier": "RED",
+      "fitness_status": "UNSAFE",
+      "predicted_metric": 0.0,
+      "observed_metric": 1.0,
+      "residual": 1.0,
+      "calibration_status": "N/A",
+      "calibration_provenance": "N/A",
+      "remediation_status": "Policy Veto Enforced",
+      "uncertainty": "[0.0, 1.1] (SE=0.57)",
+      "uncertainty_se": 0.57,
+      "validation_status": "Successfully Evaluated"
+    }
+  ],
+  "seed_robustness": [
+    {
+      "dataset": "California Housing",
+      "task": "supervised_regression",
+      "fitness_mean": 94.3,
+      "fitness_std": 0.0,
+      "fitness_min": 94.3,
+      "fitness_max": 94.3,
+      "metric_mean": 0.408,
+      "metric_std": 0.0214,
+      "metric_min": 0.38,
+      "metric_max": 0.44
+    },
+    {
+      "dataset": "Diabetes Progression",
+      "task": "supervised_regression",
+      "fitness_mean": 90.0,
+      "fitness_std": 0.0,
+      "fitness_min": 90.0,
+      "fitness_max": 90.0,
+      "metric_mean": 56.888,
+      "metric_std": 4.0538,
+      "metric_min": 51.89,
+      "metric_max": 62.1
+    },
+    {
+      "dataset": "Breast Cancer Diagnostic",
+      "task": "supervised_classification",
+      "fitness_mean": 70.0,
+      "fitness_std": 0.0,
+      "fitness_min": 70.0,
+      "fitness_max": 70.0,
+      "metric_mean": 0.956,
+      "metric_std": 0.008,
+      "metric_min": 0.95,
+      "metric_max": 0.97
+    },
+    {
+      "dataset": "Retail Store Transactions",
+      "task": "supervised_regression",
+      "fitness_mean": 45.68,
+      "fitness_std": 3.83,
+      "fitness_min": 41.2,
+      "fitness_max": 49.7,
+      "metric_mean": 250.022,
+      "metric_std": 6.2567,
+      "metric_min": 242.65,
+      "metric_max": 260.85
+    }
+  ],
+  "cross_dataset_correlations": {
+    "classification": {
+      "group": "Classification (Macro F1)",
+      "n": 4,
+      "pearson_r": -0.352,
+      "pearson_p": 0.6477,
+      "spearman_rho": -0.056,
+      "spearman_p": 0.9444
+    },
+    "regression": {
+      "group": "Regression & Time Series (Error Ratio)",
+      "n": 5,
+      "pearson_r": -0.01,
+      "pearson_p": 0.9873,
+      "spearman_rho": -0.154,
+      "spearman_p": 0.8048
+    }
+  },
+  "integrity_checks": {
+    "structural_target_discovery": [
+      {
+        "dataset": "California Housing",
+        "detected_target": "MedHouseVal",
+        "target_evidence": [
+          "Continuous numeric cardinality (1067 unique values)",
+          "Floating-point measurement with variance (std=0.87)",
+          "Meaningful dynamic range [0.39, 5.00]",
+          "Positioned as terminal column in schema",
+          "Supported by 8 candidate predictor features"
+        ],
+        "structural_evidence": true
+      },
+      {
+        "dataset": "Diabetes Progression",
+        "detected_target": "disease_progression",
+        "target_evidence": [
+          "Continuous numeric cardinality (214 unique values)",
+          "Floating-point measurement with variance (std=77.09)",
+          "Meaningful dynamic range [25.00, 346.00]",
+          "Positioned as terminal column in schema",
+          "Supported by 10 candidate predictor features"
+        ],
+        "structural_evidence": true
+      },
+      {
+        "dataset": "Breast Cancer Diagnostic",
+        "detected_target": "biopsy_result",
+        "target_evidence": [
+          "Semantic categorical target keyword in 'biopsy_result'",
+          "Discrete multi-class distribution (2 classes)",
+          "Terminal column in schema",
+          "Binary [0, 1] indicator distribution"
+        ],
+        "structural_evidence": true
+      },
+      {
+        "dataset": "Iris Species Morphometrics",
+        "detected_target": "variety",
+        "target_evidence": [
+          "Terminal column with 3 distinct classes",
+          "Non-numeric discrete categorical distribution",
+          "Supported by 4 candidate predictor features"
+        ],
+        "structural_evidence": true
+      },
+      {
+        "dataset": "Melbourne Daily Temperatures",
+        "detected_target": "Temp",
+        "target_evidence": [
+          "Continuous numeric cardinality (229 unique values)",
+          "Continuous numeric sequence aligned with temporal index",
+          "Floating-point measurement with variance (std=4.07)",
+          "Meaningful dynamic range [0.00, 26.30]",
+          "Positioned as terminal column in schema"
+        ],
+        "structural_evidence": true
+      },
+      {
+        "dataset": "Air Quality Sensors",
+        "detected_target": "AH",
+        "target_evidence": [
+          "Continuous numeric cardinality (1314 unique values)",
+          "Continuous numeric sequence aligned with temporal index",
+          "Floating-point measurement with variance (std=26.72)",
+          "Meaningful dynamic range [-200.00, 1.49]",
+          "Positioned near terminal boundary",
+          "Supported by 15 candidate predictor features"
+        ],
+        "structural_evidence": true
+      },
+      {
+        "dataset": "Spatial Coordinate Clusters",
+        "detected_target": null,
+        "target_evidence": [],
+        "structural_evidence": false
+      },
+      {
+        "dataset": "Academic Institution Profiles",
+        "detected_target": "Expenses",
+        "target_evidence": [
+          "Continuous numeric cardinality (25 unique values)",
+          "Floating-point measurement with variance (std=14.42)",
+          "Meaningful dynamic range [8.70, 63.58]",
+          "Positioned near terminal boundary",
+          "Supported by 5 candidate predictor features"
+        ],
+        "structural_evidence": true
+      },
+      {
+        "dataset": "Retail Store Transactions",
+        "detected_target": "sales_amount",
+        "target_evidence": [
+          "Continuous numeric cardinality (350 unique values)",
+          "Continuous numeric sequence aligned with temporal index",
+          "Floating-point measurement with variance (std=242.21)",
+          "Meaningful dynamic range [16.94, 849.76]",
+          "Semantic regression target keyword in 'sales_amount'",
+          "Positioned as terminal column in schema",
+          "Supported by 5 candidate predictor features"
+        ],
+        "structural_evidence": true
+      },
+      {
+        "dataset": "Messy Telemetry (Warning Cap)",
+        "detected_target": "failure_status",
+        "target_evidence": [
+          "Semantic categorical target keyword in 'failure_status'",
+          "Discrete multi-class distribution (2 classes)",
+          "Terminal column in schema",
+          "Binary [0, 1] indicator distribution"
+        ],
+        "structural_evidence": true
+      },
+      {
+        "dataset": "Corrupted Fraud Log (Hard Veto)",
+        "detected_target": "fraud_class",
+        "target_evidence": [
+          "Semantic categorical target keyword in 'fraud_class'",
+          "Discrete multi-class distribution (2 classes)",
+          "Terminal column in schema",
+          "Binary [0, 1] indicator distribution"
+        ],
+        "structural_evidence": true
+      }
+    ],
+    "downstream_verification": [
+      {
+        "dataset": "California Housing",
+        "task": "supervised_regression",
+        "leakage_free": true,
+        "temporal_ordered": true,
+        "clustering_unsupervised": true
+      },
+      {
+        "dataset": "Diabetes Progression",
+        "task": "supervised_regression",
+        "leakage_free": true,
+        "temporal_ordered": true,
+        "clustering_unsupervised": true
+      },
+      {
+        "dataset": "Breast Cancer Diagnostic",
+        "task": "supervised_classification",
+        "leakage_free": true,
+        "temporal_ordered": true,
+        "clustering_unsupervised": true
+      },
+      {
+        "dataset": "Iris Species Morphometrics",
+        "task": "supervised_classification",
+        "leakage_free": true,
+        "temporal_ordered": true,
+        "clustering_unsupervised": true
+      },
+      {
+        "dataset": "Melbourne Daily Temperatures",
+        "task": "time_series_forecasting",
+        "leakage_free": true,
+        "temporal_ordered": true,
+        "clustering_unsupervised": true
+      },
+      {
+        "dataset": "Air Quality Sensors",
+        "task": "time_series_forecasting",
+        "leakage_free": true,
+        "temporal_ordered": true,
+        "clustering_unsupervised": true
+      },
+      {
+        "dataset": "Spatial Coordinate Clusters",
+        "task": "clustering",
+        "leakage_free": true,
+        "temporal_ordered": true,
+        "clustering_unsupervised": true
+      },
+      {
+        "dataset": "Academic Institution Profiles",
+        "task": "clustering",
+        "leakage_free": true,
+        "temporal_ordered": true,
+        "clustering_unsupervised": true
+      },
+      {
+        "dataset": "Retail Store Transactions",
+        "task": "supervised_regression",
+        "leakage_free": true,
+        "temporal_ordered": true,
+        "clustering_unsupervised": true
+      },
+      {
+        "dataset": "Messy Telemetry (Warning Cap)",
+        "task": "supervised_classification",
+        "leakage_free": true,
+        "temporal_ordered": true,
+        "clustering_unsupervised": true
+      },
+      {
+        "dataset": "Corrupted Fraud Log (Hard Veto)",
+        "task": "supervised_classification",
+        "leakage_free": true,
+        "temporal_ordered": true,
+        "clustering_unsupervised": true
+      }
+    ]
+  }
+}

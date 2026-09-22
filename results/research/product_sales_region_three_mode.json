@@ -1,0 +1,32 @@
+[
+  {
+    "Mode": "1. Autonomous Auto-Detect",
+    "Inferred_Task": "supervised_regression",
+    "Confidence": "86.4%",
+    "Raw_Fitness": 92.6,
+    "Final_Fitness": 43.9,
+    "Tier": "GREEN",
+    "Status": "NORMAL",
+    "Notes": "Correctly detected transactional structure; avoided false veto"
+  },
+  {
+    "Mode": "2. Manual Supervised Regression",
+    "Inferred_Task": "supervised_regression",
+    "Confidence": "Manual Override",
+    "Raw_Fitness": 92.6,
+    "Final_Fitness": 43.9,
+    "Tier": "GREEN",
+    "Status": "NORMAL",
+    "Notes": "Normal tabular evaluation; date treated as feature"
+  },
+  {
+    "Mode": "3. Manual Time-Series (Forced)",
+    "Inferred_Task": "time_series_forecasting",
+    "Confidence": "Manual Override",
+    "Raw_Fitness": 63.0,
+    "Final_Fitness": 0.0,
+    "Tier": "RED",
+    "Status": "UNSAFE",
+    "Notes": "Correctly vetoed to 0.0 (UNSAFE) due to duplicate timestamp collisions"
+  }
+]

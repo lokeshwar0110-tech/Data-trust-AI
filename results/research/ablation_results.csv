@@ -1,0 +1,41 @@
+dataset,tier,task,condition,experimental_unit,dataset_level_n,seed_repetitions,isolated_component,comparison_scope,fitness,delta_from_full_fitness,delta_from_static_fitness,observed_metric,delta_from_full_metric
+Breast Cancer Diagnostic,Tier C (Held-Out Generalization),supervised_classification,FULL_DATATRUST,dataset,8,5,full_pipeline,reference_system,70.0,0.0,-17.7,0.9474,0.0
+Breast Cancer Diagnostic,Tier C (Held-Out Generalization),supervised_classification,NO_VETO,dataset,8,5,defect_policy,component_isolation,88.4,18.4,0.7,0.9474,0.0
+Breast Cancer Diagnostic,Tier C (Held-Out Generalization),supervised_classification,NO_CALIBRATION,dataset,8,5,empirical_calibration,component_isolation,70.0,0.0,-17.7,0.9474,0.0
+Breast Cancer Diagnostic,Tier C (Held-Out Generalization),supervised_classification,NO_REMEDIATION,dataset,8,5,dataset_remediation,data_state_contrast,70.0,0.0,-17.7,0.9474,0.0
+Breast Cancer Diagnostic,Tier C (Held-Out Generalization),supervised_classification,STATIC_BASELINE,dataset,8,5,none (omnibus baseline),omnibus_contrast,87.7,17.7,0.0,0.9474,0.0
+California Housing,Tier C (Held-Out Generalization),supervised_regression,FULL_DATATRUST,dataset,8,5,full_pipeline,reference_system,70.0,0.0,-24.75,0.4366,0.0
+California Housing,Tier C (Held-Out Generalization),supervised_regression,NO_VETO,dataset,8,5,defect_policy,component_isolation,94.7,24.7,-0.05,0.4366,0.0
+California Housing,Tier C (Held-Out Generalization),supervised_regression,NO_CALIBRATION,dataset,8,5,empirical_calibration,component_isolation,70.0,0.0,-24.75,0.4366,0.0
+California Housing,Tier C (Held-Out Generalization),supervised_regression,NO_REMEDIATION,dataset,8,5,dataset_remediation,data_state_contrast,70.0,0.0,-24.75,0.4366,0.0
+California Housing,Tier C (Held-Out Generalization),supervised_regression,STATIC_BASELINE,dataset,8,5,none (omnibus baseline),omnibus_contrast,94.75,24.75,0.0,0.4366,0.0
+Diabetes Progression,Tier C (Held-Out Generalization),supervised_regression,FULL_DATATRUST,dataset,8,5,full_pipeline,reference_system,90.0,0.0,-7.84,57.9182,0.0
+Diabetes Progression,Tier C (Held-Out Generalization),supervised_regression,NO_VETO,dataset,8,5,defect_policy,component_isolation,96.4,6.4,-1.44,57.9182,0.0
+Diabetes Progression,Tier C (Held-Out Generalization),supervised_regression,NO_CALIBRATION,dataset,8,5,empirical_calibration,component_isolation,96.37,6.37,-1.47,57.9182,0.0
+Diabetes Progression,Tier C (Held-Out Generalization),supervised_regression,NO_REMEDIATION,dataset,8,5,dataset_remediation,data_state_contrast,90.0,0.0,-7.84,57.9182,0.0
+Diabetes Progression,Tier C (Held-Out Generalization),supervised_regression,STATIC_BASELINE,dataset,8,5,none (omnibus baseline),omnibus_contrast,97.84,7.84,0.0,57.9182,0.0
+Iris Species Morphometrics,Tier B (Diagnostic Benchmark),supervised_classification,FULL_DATATRUST,dataset,8,5,full_pipeline,reference_system,70.0,0.0,-21.38,0.9667,0.0
+Iris Species Morphometrics,Tier B (Diagnostic Benchmark),supervised_classification,NO_VETO,dataset,8,5,defect_policy,component_isolation,95.6,25.6,4.22,0.9667,0.0
+Iris Species Morphometrics,Tier B (Diagnostic Benchmark),supervised_classification,NO_CALIBRATION,dataset,8,5,empirical_calibration,component_isolation,70.0,0.0,-21.38,0.9667,0.0
+Iris Species Morphometrics,Tier B (Diagnostic Benchmark),supervised_classification,NO_REMEDIATION,dataset,8,5,dataset_remediation,data_state_contrast,70.0,0.0,-21.38,0.9667,0.0
+Iris Species Morphometrics,Tier B (Diagnostic Benchmark),supervised_classification,STATIC_BASELINE,dataset,8,5,none (omnibus baseline),omnibus_contrast,91.38,21.38,0.0,0.9667,0.0
+Melbourne Daily Temperatures,Tier B (Diagnostic Benchmark),time_series_forecasting,FULL_DATATRUST,dataset,8,5,full_pipeline,reference_system,91.8,0.0,-4.08,2.4505,0.0
+Melbourne Daily Temperatures,Tier B (Diagnostic Benchmark),time_series_forecasting,NO_VETO,dataset,8,5,defect_policy,component_isolation,96.7,4.9,0.82,2.4505,0.0
+Melbourne Daily Temperatures,Tier B (Diagnostic Benchmark),time_series_forecasting,NO_CALIBRATION,dataset,8,5,empirical_calibration,component_isolation,96.68,4.88,0.8,2.4505,0.0
+Melbourne Daily Temperatures,Tier B (Diagnostic Benchmark),time_series_forecasting,NO_REMEDIATION,dataset,8,5,dataset_remediation,data_state_contrast,91.8,0.0,-4.08,2.4505,0.0
+Melbourne Daily Temperatures,Tier B (Diagnostic Benchmark),time_series_forecasting,STATIC_BASELINE,dataset,8,5,none (omnibus baseline),omnibus_contrast,95.88,4.08,0.0,2.4505,0.0
+Retail Store Sales,Tier C (Held-Out Generalization),supervised_regression,FULL_DATATRUST,dataset,8,5,full_pipeline,reference_system,46.3,0.0,-41.27,278.4357,0.0
+Retail Store Sales,Tier C (Held-Out Generalization),supervised_regression,NO_VETO,dataset,8,5,defect_policy,component_isolation,93.3,47.0,5.73,278.4357,0.0
+Retail Store Sales,Tier C (Held-Out Generalization),supervised_regression,NO_CALIBRATION,dataset,8,5,empirical_calibration,component_isolation,93.26,46.96,5.69,278.4357,0.0
+Retail Store Sales,Tier C (Held-Out Generalization),supervised_regression,NO_REMEDIATION,dataset,8,5,dataset_remediation,data_state_contrast,46.3,0.0,-41.27,278.4357,0.0
+Retail Store Sales,Tier C (Held-Out Generalization),supervised_regression,STATIC_BASELINE,dataset,8,5,none (omnibus baseline),omnibus_contrast,87.57,41.27,0.0,278.4357,0.0
+UCI Air Quality Sensors,Tier B (Calibration Benchmark),time_series_forecasting,FULL_DATATRUST,dataset,8,5,full_pipeline,reference_system,70.0,0.0,-21.5,53.8789,0.0
+UCI Air Quality Sensors,Tier B (Calibration Benchmark),time_series_forecasting,NO_VETO,dataset,8,5,defect_policy,component_isolation,90.3,20.3,-1.2,53.8789,0.0
+UCI Air Quality Sensors,Tier B (Calibration Benchmark),time_series_forecasting,NO_CALIBRATION,dataset,8,5,empirical_calibration,component_isolation,70.0,0.0,-21.5,53.8789,0.0
+UCI Air Quality Sensors,Tier B (Calibration Benchmark),time_series_forecasting,NO_REMEDIATION,dataset,8,5,dataset_remediation,data_state_contrast,70.0,0.0,-21.5,53.8789,0.0
+UCI Air Quality Sensors,Tier B (Calibration Benchmark),time_series_forecasting,STATIC_BASELINE,dataset,8,5,none (omnibus baseline),omnibus_contrast,91.5,21.5,0.0,53.8789,0.0
+UCI Red Wine Quality,Tier B (Calibration Benchmark),supervised_regression,FULL_DATATRUST,dataset,8,5,full_pipeline,reference_system,70.0,0.0,-24.17,0.591,0.0
+UCI Red Wine Quality,Tier B (Calibration Benchmark),supervised_regression,NO_VETO,dataset,8,5,defect_policy,component_isolation,94.5,24.5,0.33,0.591,0.0
+UCI Red Wine Quality,Tier B (Calibration Benchmark),supervised_regression,NO_CALIBRATION,dataset,8,5,empirical_calibration,component_isolation,70.0,0.0,-24.17,0.591,0.0
+UCI Red Wine Quality,Tier B (Calibration Benchmark),supervised_regression,NO_REMEDIATION,dataset,8,5,dataset_remediation,data_state_contrast,70.0,0.0,-24.17,0.591,0.0
+UCI Red Wine Quality,Tier B (Calibration Benchmark),supervised_regression,STATIC_BASELINE,dataset,8,5,none (omnibus baseline),omnibus_contrast,94.17,24.17,0.0,0.591,0.0

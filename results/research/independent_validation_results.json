@@ -1,0 +1,198 @@
+{
+  "framework": "DataTrust AI v3 Independent Dataset Validation",
+  "evaluated_count": 6,
+  "datasets": [
+    {
+      "Dataset": "Wine Quality Red",
+      "Domain": "Physicochemical / Enology",
+      "Rows": 1599,
+      "Cols": 12,
+      "Task_Assigned": "supervised_regression",
+      "Task_Inferred": "supervised_classification",
+      "Inference_Conf": 0.94,
+      "P(T|D)": {
+        "supervised_regression": 0.015,
+        "supervised_classification": 0.94,
+        "time_series_forecasting": 0.015,
+        "clustering": 0.03
+      },
+      "Raw_Fitness": 94.5,
+      "Tier": "YELLOW",
+      "Final_Fitness": 70.0,
+      "Status": "WARNING",
+      "Baseline_Metric": 0.67,
+      "Metric_Name": "RMSE",
+      "Predicted_MRU_Gain": 0.0,
+      "Dimensions": {
+        "completeness": 100.0,
+        "validity": 100.0,
+        "consistency": 100.0,
+        "uniqueness": 85.0,
+        "timeliness": 83.1,
+        "outlier_anomaly": 87.0,
+        "distribution_balance": 98.3,
+        "coverage_representativeness": 100.0
+      }
+    },
+    {
+      "Dataset": "Air Quality Sensor",
+      "Domain": "Environmental / Sensor Network",
+      "Rows": 3000,
+      "Cols": 16,
+      "Task_Assigned": "time_series_forecasting",
+      "Task_Inferred": "time_series_forecasting",
+      "Inference_Conf": 0.887,
+      "P(T|D)": {
+        "supervised_regression": 0.079,
+        "supervised_classification": 0.011,
+        "time_series_forecasting": 0.887,
+        "clustering": 0.023
+      },
+      "Raw_Fitness": 92.5,
+      "Tier": "GREEN",
+      "Final_Fitness": 81.3,
+      "Status": "NORMAL",
+      "Baseline_Metric": 34.43,
+      "Metric_Name": "RMSE",
+      "Predicted_MRU_Gain": 0.0,
+      "Dimensions": {
+        "completeness": 100.0,
+        "validity": 100.0,
+        "consistency": 64.0,
+        "uniqueness": 100.0,
+        "timeliness": 97.3,
+        "outlier_anomaly": 87.0,
+        "distribution_balance": 95.0,
+        "coverage_representativeness": 100.0
+      }
+    },
+    {
+      "Dataset": "California Housing",
+      "Domain": "Demographics / Real Estate",
+      "Rows": 20640,
+      "Cols": 9,
+      "Task_Assigned": "supervised_regression",
+      "Task_Inferred": "supervised_regression",
+      "Inference_Conf": 0.94,
+      "P(T|D)": {
+        "supervised_regression": 0.94,
+        "supervised_classification": 0.015,
+        "time_series_forecasting": 0.015,
+        "clustering": 0.03
+      },
+      "Raw_Fitness": 94.7,
+      "Tier": "GREEN",
+      "Final_Fitness": 93.3,
+      "Status": "NORMAL",
+      "Baseline_Metric": 0.83,
+      "Metric_Name": "RMSE",
+      "Predicted_MRU_Gain": 0.0,
+      "Dimensions": {
+        "completeness": 100.0,
+        "validity": 100.0,
+        "consistency": 94.0,
+        "uniqueness": 100.0,
+        "timeliness": 100.0,
+        "outlier_anomaly": 87.0,
+        "distribution_balance": 92.2,
+        "coverage_representativeness": 100.0
+      }
+    },
+    {
+      "Dataset": "Diabetes Progression",
+      "Domain": "Biomedical / Clinical",
+      "Rows": 442,
+      "Cols": 11,
+      "Task_Assigned": "supervised_regression",
+      "Task_Inferred": "supervised_regression",
+      "Inference_Conf": 0.94,
+      "P(T|D)": {
+        "supervised_regression": 0.94,
+        "supervised_classification": 0.015,
+        "time_series_forecasting": 0.015,
+        "clustering": 0.03
+      },
+      "Raw_Fitness": 96.4,
+      "Tier": "GREEN",
+      "Final_Fitness": 90.0,
+      "Status": "NORMAL",
+      "Baseline_Metric": 58.34,
+      "Metric_Name": "RMSE",
+      "Predicted_MRU_Gain": 0.0,
+      "Dimensions": {
+        "completeness": 100.0,
+        "validity": 100.0,
+        "consistency": 100.0,
+        "uniqueness": 100.0,
+        "timeliness": 100.0,
+        "outlier_anomaly": 86.2,
+        "distribution_balance": 96.5,
+        "coverage_representativeness": 100.0
+      }
+    },
+    {
+      "Dataset": "Iris Flower Morphometry",
+      "Domain": "Botanical / Ecology",
+      "Rows": 150,
+      "Cols": 5,
+      "Task_Assigned": "supervised_classification",
+      "Task_Inferred": "supervised_classification",
+      "Inference_Conf": 0.94,
+      "P(T|D)": {
+        "supervised_regression": 0.015,
+        "supervised_classification": 0.94,
+        "time_series_forecasting": 0.015,
+        "clustering": 0.03
+      },
+      "Raw_Fitness": 95.6,
+      "Tier": "YELLOW",
+      "Final_Fitness": 70.0,
+      "Status": "WARNING",
+      "Baseline_Metric": 0.85,
+      "Metric_Name": "F1",
+      "Predicted_MRU_Gain": 0.0,
+      "Dimensions": {
+        "completeness": 100.0,
+        "validity": 100.0,
+        "consistency": 94.0,
+        "uniqueness": 99.3,
+        "timeliness": 52.0,
+        "outlier_anomaly": 85.7,
+        "distribution_balance": 100.0,
+        "coverage_representativeness": 100.0
+      }
+    },
+    {
+      "Dataset": "Retail Store Transactions",
+      "Domain": "E-Commerce / Commercial Retail",
+      "Rows": 300,
+      "Cols": 6,
+      "Task_Assigned": "supervised_regression",
+      "Task_Inferred": "supervised_regression",
+      "Inference_Conf": 0.864,
+      "P(T|D)": {
+        "supervised_regression": 0.864,
+        "supervised_classification": 0.014,
+        "time_series_forecasting": 0.095,
+        "clustering": 0.027
+      },
+      "Raw_Fitness": 93.4,
+      "Tier": "GREEN",
+      "Final_Fitness": 46.6,
+      "Status": "NORMAL",
+      "Baseline_Metric": 250.84,
+      "Metric_Name": "RMSE",
+      "Predicted_MRU_Gain": 0.0,
+      "Dimensions": {
+        "completeness": 100.0,
+        "validity": 100.0,
+        "consistency": 100.0,
+        "uniqueness": 100.0,
+        "timeliness": 15.0,
+        "outlier_anomaly": 87.0,
+        "distribution_balance": 99.6,
+        "coverage_representativeness": 100.0
+      }
+    }
+  ]
+}

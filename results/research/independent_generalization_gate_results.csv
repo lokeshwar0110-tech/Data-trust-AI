@@ -1,0 +1,12 @@
+dataset,task,task_confidence,target,time_column,raw_fitness,final_fitness,predicted_metric,observed_metric,residual,calibration_status,remediation_status,uncertainty,validation_status
+California Housing,supervised_regression,0.94,MedHouseVal,,94.7,70.0,0.57,0.38,-0.19,Calibration Improved,Policy Veto Enforced,"[69.5, 70.5] (SE=0.23)",Successfully Evaluated
+Diabetes Progression,supervised_regression,0.94,disease_progression,,96.4,90.0,19.58,52.84,33.26,Calibration Improved,No Remediation Required,"[85.1, 94.9] (SE=2.51)",Successfully Evaluated
+Breast Cancer Diagnostic,supervised_classification,0.94,biopsy_result,,88.4,70.0,0.62,0.97,0.35,Calibration Improved,Policy Veto Enforced,"[69.3, 70.7] (SE=0.35)",Successfully Evaluated
+Iris Species Morphometrics,supervised_classification,0.94,variety,,95.6,70.0,0.62,1.0,0.38,Calibration Improved,Policy Veto Enforced,"[69.5, 70.5] (SE=0.22)",Successfully Evaluated
+Melbourne Daily Temperatures,time_series_forecasting,0.887,Temp,Date,96.7,91.8,1.02,2.46,1.44,Calibration Improved,No Remediation Required,"[91.1, 92.5] (SE=0.36)",Successfully Evaluated
+Air Quality Sensors,time_series_forecasting,0.887,CO(GT),timestamp,90.3,70.0,53.07,36.09,-16.98,Calibration Improved,Policy Veto Enforced,"[65.9, 74.1] (SE=2.07)",Successfully Evaluated
+Spatial Coordinate Clusters,clustering,0.55,,,96.7,89.3,0.62,0.18,-0.44,Calibration Improved,No Remediation Required,"[87.1, 91.5] (SE=1.14)",Successfully Evaluated
+Academic Institution Profiles,clustering,0.94,,,87.3,75.8,0.54,0.42,-0.12,Calibration Improved,No Remediation Required,"[75.2, 76.4] (SE=0.33)",Successfully Evaluated
+Retail Store Transactions,supervised_regression,0.864,sales_amount,order_date,92.7,49.7,74.97,242.61,167.64,Calibration Improved,No Remediation Required,"[44.7, 54.7] (SE=2.53)",Successfully Evaluated
+Messy Telemetry (Warning Cap),supervised_classification,0.94,failure_status,,88.1,65.0,0.57,0.84,0.27,Calibration Improved,Policy Veto Enforced,"[64.3, 65.7] (SE=0.36)",Successfully Evaluated
+Corrupted Fraud Log (Hard Veto),supervised_classification,0.94,fraud_class,,80.9,0.0,0.0,1.0,1.0,N/A,Policy Veto Enforced,"[0.0, 1.1] (SE=0.57)",Successfully Evaluated

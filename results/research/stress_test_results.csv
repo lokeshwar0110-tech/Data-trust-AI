@@ -1,0 +1,7 @@
+stress_test,description,expected_action,observed_tier,observed_final_fitness,observed_status,veto_fired,calibration_status,validation_status,safety_verified
+Stress_1_Severe_Class_Collapse,Minority class represents 0.67% (< 2.0% veto threshold),"RED Hard Veto (F=0.0, status=UNSAFE)",RED,0.0,UNSAFE,True,N/A (Bypassed),Evaluated on uncollapsed partition,True
+Stress_2_Temporal_Sequence_Disorder,Non-monotonic chronological timestamps with collisions,RED Hard Veto (TEMPORAL_SEQUENCE_DISORDER),RED,0.0,UNSAFE,True,N/A (Bypassed),Validation Omitted (Insufficient N),True
+Stress_3_Moderate_Class_Imbalance,Minority class represents 6.0% (< 10.0% standard threshold),"YELLOW Warning Cap (F <= 65.0, status=WARNING)",YELLOW,65.0,WARNING,True,Calibration Improved,Successfully Evaluated,True
+Stress_4_Flat_Dimension_Scores,Identical dimension scores across all 8 dimensions (grad F = 0),Calibration Rejected (provenance=REJECTED),N/A,75.0,Calibration Rejected,False,Calibration Rejected,Simulated Divergence,True
+Stress_5_Simplex_Boundary_Clipping,"Gradient updates bounded strictly within [0.02, 0.60] on probability simplex",Sum of canonical calibrated weights strictly equals 1.0000,N/A,75.0,Sum = 1.0000,False,Simplex Preserved,Simulated,True
+Stress_6_Insufficient_Data_Omission,Dataset with N=5 (< 10 required observations for validation),"Validation Omitted (observed_metric=None, no fake 0.0)",GREEN,95.8,NORMAL,False,N/A (Bypassed),Validation Omitted,True
